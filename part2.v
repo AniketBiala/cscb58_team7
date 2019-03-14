@@ -41,9 +41,8 @@ module lab_6
 	wire [6:0] y;
 	wire writeEn;
 	
-	wire load_x;
-	wire load_y;
-	wire [3:0] pixel_offsets;
+
+
 	
 
 	// Create an Instance of a VGA controller - there can be only one!
@@ -70,8 +69,7 @@ module lab_6
 		defparam VGA.BITS_PER_COLOUR_CHANNEL = 1;
 		defparam VGA.BACKGROUND_IMAGE = "black.mif";
 			
-	// Put your code here. Your code should produce signals x,y,colour and writeEn/plot
-	// for the VGA controller, in addition to any other functionality your design may require.
+	
 	reg [7:0] starting_x_pos = 8'b00000010; // starting x-pos in bottom left corner of screen
 	reg [6:0] starting_y_pos = 7'b1110010; // starting y-pos in bottom left corner of screen
 	reg [2:0] player_colour = 3'b100; //red
@@ -80,27 +78,36 @@ module lab_6
 	//draw_initial_player draw1(.start_x(starting_x_pos), .start_y(starting_y_pos), .colour(player_colour));
 // Instansiate datapath
 	// 10100000 - too far for x_pos && 10011100 is enough for 4-bit square
-	// 1110100 is biggest y-pos for 4-bit square
-	data_path d0(.x_pos(x), .y_pos(y), .clk(CLOCK_50), 
-					 .load_x_val(starting_x_pos), .load_y_val(starting_y_pos), .load_x(load_x), .load_y(load_y), .pixel_counter(pixel_offsets), .reset_n(resetn)); 
-
-    // Instansiate FSM control
-    FSM controller(.go(1'b1), .ResetN(resetn), .LoadX(load_x), .LoadY(load_y), .increment(pixel_offsets), .draw(writeEn), .clk(CLOCK_50));
+	// 1110100 is biggest y-pos for 4-bit squa
+	move_player mv(1'b0, 1'b0, 1'b0, starting_x_pos, starting_y_pos, x, y, CLOCK_50, resetn, writeEn);
     
 endmodule
 
 
 //module draw_initial_player(start_x, start_y, colour, x, y, clock, );//endmodu e
 
-////module move_player(right, left, jump, x, y, colour);
-////	input right, left, jump;
-////	input [7:0] x;
-////	input [6:0] y;
-//	//input [2:0] colour;
-//	
-//	
-//
-//endmodule
+module move_player(right, left, jump, origin_x, origin_y, x, y, clock, reset, writeEn);
+
+	input right, left, jump;
+	input [7:0] origin_x;
+	input [6:0] origin_y;
+	
+	input clock;
+	output wire [7:0] x;
+	output wire [6:0] y;
+	input writeEn;
+	
+	input reset;
+	wire [3:0] pixel_offsets;
+	wire load_x;
+	wire load_y;
+
+	data_path d0(.x_pos(x), .y_pos(y), .clk(clock), .load_x_val(origin_x), .load_y_val(origin_y), .load_x(load_x), .load_y(load_y), .pixel_counter(pixel_offsets), .reset_n(reset)); 
+
+    // Instansiate FSM control
+    FSM controller(.go(1'b1), .ResetN(reset), .LoadX(load_x), .LoadY(load_y), .increment(pixel_offsets), .draw(writeEn), .clk(clock));
+	
+endmodule
 
 
 module data_path(x_pos, y_pos, clk, load_x_val, load_y_val, load_x, load_y, pixel_counter, reset_n);
