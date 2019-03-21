@@ -79,7 +79,10 @@ module dot_kong
 	
 	assign colour = player_colour;
 	
-	wire go = ~KEY[3];
+	wire go_right;
+    assign go_right = ~KEY[2];
+    wire go_left;
+    assign go_left = ~KEY[3];
 	//draw_initial_player draw1(.start_x(starting_x_pos), .start_y(starting_y_pos), .colour(player_colour));
 // Instansiate datapath
 	// 10100000 - too far for x_pos && 10011100 is enough for 4-bit square
@@ -88,7 +91,7 @@ module dot_kong
 					 .load_x_val(starting_x_pos), .load_y_val(starting_y_pos), .load_x(load_x), .load_y(load_y), .pixel_counter(pixel_offsets), .reset_n(resetn)); 
 
     // Instansiate FSM control
-    FSM controller(.go(go), .ResetN(resetn), .LoadX(load_x), .LoadY(load_y), .increment(pixel_offsets), .draw(writeEn), .clk(CLOCK_50));
+    FSM controller_background(.go(go_right), .ResetN(resetn), .LoadX(load_x), .LoadY(load_y), .increment(pixel_offsets), .draw(writeEn), .clk(CLOCK_50));
     
 endmodule
 
