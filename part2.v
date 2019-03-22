@@ -1,5 +1,3 @@
-// Part 2 skeleton
-
 module lab_6
     (
         CLOCK_50,                        //    On Board 50 MHz
@@ -27,7 +25,7 @@ module lab_6
     // Do not change the following outputs
     output            VGA_CLK;                   //    VGA Clock
     output            VGA_HS;                    //    VGA H_SYNC
-    output            VGA_VS;                    //    VGA V_SYNC
+    output            VGA_VS;                    //    VGA V_SYNC26'b10000000000000000000000000
     output            VGA_BLANK_N;                //    VGA BLANK
     output            VGA_SYNC_N;                //    VGA SYNC
     output    [9:0]    VGA_R;                   //    VGA Red[9:0]
@@ -193,11 +191,11 @@ score, reset_game);
                 score = score + 1'b1;
                 reset_game = 1'b1;
             end
-		  else if (y_player == 7'b1110001)
-				begin
-			   reset_game = 1'b1;
-				score = score;
-				end
+//		  else if (y_player == 7'b1110001)   //Change this!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//				begin
+//			   reset_game = 1'b1;
+//				score = score;
+//				end
         else if ((x_player == x_car0 && y_player == y_car0) || (x_player == x_car1 && y_player == y_car1) ||
           (x_player == x_car2 && y_player == y_car2) || (x_player == x_car3 && y_player == y_car3) ||
           (x_player == x_car4 && y_player == y_car4) || (x_player == x_car5 && y_player == y_car5) ||
@@ -214,7 +212,7 @@ score, reset_game);
             reset_game = 1'b0;
     end
 
-endmodule
+endmodule				  
 
 
 module control(clk, move_r, move_l, move_d, move_u, reset_n, ld_x, ld_y, stateNum, reset_game, dingding, how_fast);
@@ -252,6 +250,8 @@ module control(clk, move_r, move_l, move_d, move_u, reset_n, ld_x, ld_y, stateNu
 
 		else if (how_fast == 2'b01)
 		   speed <= 26'b010111110101111000010;
+	   else if (how_fast == 2'b10)
+		   speed <= 26'b010111110101111000010;
 		else
 		   speed <= 26'b01011111010111100001;
 	 end
@@ -271,7 +271,7 @@ module control(clk, move_r, move_l, move_d, move_u, reset_n, ld_x, ld_y, stateNu
            
             clear_all:
                 begin
-                    if(move_r)  // is this how to connect two wires ?????????????????????????????????????????????????????????
+                    if(move_r)  
                         next <= print_right;
                     else if (move_l)    // if player isnt moving, then let the car move
                         next <= print_left;
@@ -326,7 +326,7 @@ module control(clk, move_r, move_l, move_d, move_u, reset_n, ld_x, ld_y, stateNu
                 stateNum = 4'b0011;
                 ld_y = 1'b0;
                 //write = 1'b1;
-                end
+                end				  
                
             print_left: begin
                 stateNum = 4'b0010;
@@ -414,7 +414,7 @@ module datapath(clk, ld_x, ld_y, in, reset_n, x, y, colour, stateNum, write, ini
             else if(stateNum == 4'b0010)   
                 begin
                
-                    x[7:0] <= x - 7'b0000001;
+                    x[7:0] <= x - 8'b00000001;
                     colour <= acolour;
                     write <= 1'b1;
                 end
@@ -422,24 +422,25 @@ module datapath(clk, ld_x, ld_y, in, reset_n, x, y, colour, stateNum, write, ini
             // The following is for moving down
             else if(stateNum == 4'b0011)
 					 begin
-							begin
-							if (x != 7'b1110000)
-								begin
+						//	begin
+//							if (y != 7'b1111000)
+//								begin
 						  
 								  y[6:0] <= y + 6'b000001;
 								  colour <= acolour;
 								  write <= 1'b1;
-								end
-							else
-									write <= 1'b0;
-							
-							end
+//								end
+//							else
+//							      y[6:0] <= y;   
+//									write <= 1'b0;
+//							
+//							end
                 end
                
             else if(stateNum == 4'b1001)//for moving up
                 begin
                
-                    y[6:0] <= y - 6'b000001;
+                    y[6:0] <= y - 7'b0000001;
                     colour <= acolour;
                     write <= 1'b1;
                 end
@@ -480,7 +481,6 @@ endmodule
 module hex_display(IN, OUT1, OUT2);
    input [4:0] IN;
     output reg [7:0] OUT1, OUT2;
-     move_r
      always @(*)
      begin
         case(IN[4:0])
