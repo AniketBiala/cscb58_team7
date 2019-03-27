@@ -76,13 +76,13 @@ module lab_6
    
     wire ld_x, ld_y;
     wire [3:0] stateNum;
-    reg  [7:0] init_player_coord = 8'b00000010; // this is x coord
+    reg  [7:0] init_player_coord = 8'b00000000; // this is x coord
     wire [2:0] colour_player;
     wire [6:0] x_player;
     wire [6:0] y_player;
     wire writeEn_player;
     reg [25:0] counter_for_player = 26'b00000000000000000000000000;
-    reg [6:0] init_y_p = 7'b1110000;
+    reg [6:0] init_y_p = 7'b1110100;
     reg [2:0] acolour_p = 3'b100;
     // Instansiate datapath                             
     datapath d0(.clk(CLOCK_50), .ld_x(ld_x), .ld_y(ld_y), .in(  init_player_coord), .reset_n(resetn), .x(x_player), .y(y_player), .colour(colour_player), .write(writeEn_player), .stateNum(stateNum), .init_y(init_y_p), .acolour(acolour_p));
@@ -191,18 +191,18 @@ score, reset_game);
                 score = score + 1'b1;
                 reset_game = 1'b1;
             end
-//		  else if (y_player == 7'b1110001)   //Change this!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//		  else if (y_player == 7'b1110001)!!
 //				begin
 //			   reset_game = 1'b1;
 //				score = score;
 //				end
-        else if ((x_player == x_car0 && y_player == y_car0) || (x_player == x_car1 && y_player == y_car1) ||
-          (x_player == x_car2 && y_player == y_car2) || (x_player == x_car3 && y_player == y_car3) ||
-          (x_player == x_car4 && y_player == y_car4) || (x_player == x_car5 && y_player == y_car5) ||
-          (x_player == x_car6 && y_player == y_car6) || (x_player == x_car7 && y_player == y_car7) ||
-          (x_player == x_car8 && y_player == y_car8) || (x_player == x_car9 && y_player == y_car9) ||
-          (x_player == x_car10 && y_player == y_car10) || (x_player == x_car11 && y_player == y_car11) ||
-          (x_player == x_car12 && y_player == y_car12) )  // player collide with car (any of the 13 cars)
+        else if ((x_player == x_car0 && y_player == y_car0))// || (x_player == x_car1 && y_player == y_car1) ||
+//          (x_player == x_car2 && y_player == y_car2) || (x_player == x_car3 && y_player == y_car3) ||
+//          (x_player == x_car4 && y_player == y_car4) || (x_player == x_car5 && y_player == y_car5) ||
+//          (x_player == x_car6 && y_player == y_car6) || (x_player == x_car7 && y_player == y_car7) ||
+//          (x_player == x_car8 && y_player == y_car8) || (x_player == x_car9 && y_player == y_car9) ||
+//          (x_player == x_car10 && y_player == y_car10) || (x_player == x_car11 && y_player == y_car11) ||
+//          (x_player == x_car12 && y_player == y_car12) )  // player collide with car (any of the 13 cars)
             begin
                      reset_game = 1'b1;
                      score = 1'b0;
@@ -382,14 +382,14 @@ module datapath(clk, ld_x, ld_y, in, reset_n, x, y, colour, stateNum, write, ini
             colour <= 3'b000;
         end
         else
-        begin
+        begin       
             if(ld_x)
                 begin
                     x[7:0] <= in;
                     y <= init_y;
                     write <= 1'b0;
                 end
-            else if(ld_y)
+            else if(ld_y)  // !!!!!!!!!!!!!!!!!!!!!!--- this is where x is being wrapped --------!!!possibly....
                 begin
                     write <= 1'b0;
                 end
@@ -423,7 +423,7 @@ module datapath(clk, ld_x, ld_y, in, reset_n, x, y, colour, stateNum, write, ini
             else if(stateNum == 4'b0011)
 					 begin
 							begin
-							if (x > 8'b10011110)
+							if (x > 8'b1110110)
 								begin
 						  
 								  y[6:0] <= y + 6'b000001;
