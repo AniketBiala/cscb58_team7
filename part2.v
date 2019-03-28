@@ -76,14 +76,14 @@ module lab_6
    
     wire ld_x, ld_y;
     wire [3:0] stateNum;
-    reg  [7:0] init_player_coord = 8'b00000010; // this is x coord
+    reg  [7:0] init_player_coord = 8'b00000101; // this is x coord
     wire [2:0] colour_player;
     wire [6:0] x_player;
     wire [6:0] y_player;
     wire writeEn_player;
     reg [25:0] counter_for_player = 26'b00000000000000000000000000;
-    reg [6:0] init_y_p = 7'b1110000;
-    reg [2:0] acolour_p = 3'b100;
+    reg [6:0] init_y_p = 7'b1110101;
+    reg [2:0] acolour_p = 3'b010;
     // Instansiate datapath                             
     datapath d0(.clk(CLOCK_50), .ld_x(ld_x), .ld_y(ld_y), .in(  init_player_coord), .reset_n(resetn), .x(x_player), .y(y_player), .colour(colour_player), .write(writeEn_player), .stateNum(stateNum), .init_y(init_y_p), .acolour(acolour_p));
    
@@ -102,7 +102,7 @@ module lab_6
     wire writeEn_car0;
     reg [25:0] counter_for_car0 = 26'b00000000000000000000000001;
     reg [6:0] init_y_c0 = 7'b0101010;
-    reg [2:0] acolour_c0 = 3'b100;
+    reg [2:0] acolour_c0 = 3'b010;
     // Instansiate datapath                                
     datapath car_0_d(.clk(CLOCK_50), .ld_x(ld_x_car0), .ld_y(ld_y_car0), .in(  car0_coord), .reset_n(resetn), .x(x_car0), .y(y_car0), .colour(colour_car0), .write(writeEn_car0), .stateNum(stateNum_car0),  .init_y(init_y_c0), .acolour(acolour_c0));
    
@@ -216,7 +216,7 @@ endmodule
 
 
 module control(clk, move_r, move_l, move_d, move_u, reset_n, ld_x, ld_y, stateNum, reset_game, dingding, how_fast);
-    input [25:0] dingding; // dingding is the counter! It counts like this: Ding!!! Ding!!! Ding!!! Ding!!! Ding!!!
+    input [25:0] dingding; // dingding is the counter!
     input reset_game;
     input clk, move_r, move_l, move_d, move_u, reset_n;
 	 input [1:0] how_fast;
@@ -375,21 +375,21 @@ module datapath(clk, ld_x, ld_y, in, reset_n, x, y, colour, stateNum, write, ini
 
     always @(posedge clk)
     begin
-        if(!reset_n)
-        begin
-            x <= 7'b0000000;
-            y <= 6'b000000;
-            colour <= 3'b000;
-        end
-        else
-        begin
+//        if(!reset_n)
+//        begin
+//            x <= 7'b0000000;
+//            y <= 6'b000000;
+//            colour <= 3'b000;
+//        end
+//        else
+//        begin       
             if(ld_x)
                 begin
                     x[7:0] <= in;
                     y <= init_y;
                     write <= 1'b0;
                 end
-            else if(ld_y)
+            else if(ld_y)  // !!!!!!!!!!!!!!!!!!!!!!--- this is where x is being wrapped --------!!!possibly....
                 begin
                     write <= 1'b0;
                 end
@@ -422,27 +422,39 @@ module datapath(clk, ld_x, ld_y, in, reset_n, x, y, colour, stateNum, write, ini
             // The following is for moving down
             else if(stateNum == 4'b0011)
 					 begin
-						//	begin
-//							if (y != 7'b1111000)
-//								begin
+							begin
+							if ((x % 8'b1111110) == 8'b1) //126
+								begin
 						  
 								  y[6:0] <= y + 6'b000001;
 								  colour <= acolour;
 								  write <= 1'b1;
-//								end
-//							else
-//							      y[6:0] <= y;   
-//									write <= 1'b0;
-//							
-//							end
+								end
+							else
+							      y[6:0] <= y; 
+							      colour <= acolour;		
+									write <= 1'b1;
+							
+							end
                 end
                
             else if(stateNum == 4'b1001)//for moving up
                 begin
                
-                    y[6:0] <= y - 7'b0000001;
-                    colour <= acolour;
-                    write <= 1'b1;
+							begin
+							if ((x % 8'b1111110) == 8'b1) //126
+								begin
+						  
+								  y[6:0] <= y - 7'b0000001;
+								  colour <= acolour;
+								  write <= 1'b1;
+								end
+							else
+							      y[6:0] <= y; 
+							      colour <= acolour;		
+									write <= 1'b1;
+							
+							end
                 end
                
             else if(stateNum == 4'b1000)//after drawing
@@ -450,7 +462,7 @@ module datapath(clk, ld_x, ld_y, in, reset_n, x, y, colour, stateNum, write, ini
                     write <= 1'b0;
                 end
                
-        end
+       // end
     end
    
 endmodule
@@ -654,28 +666,3 @@ module hex_display(IN, OUT1, OUT2);
 
     end
 endmodule
-
-
-
-/* The following is the python code for testing generating random speeds  (edit mar 27) 
- 
-def testing(depth, A):
-    if depth == 0:
-        return A;
-    else:
-        A[1] = (A[0] + A[1])%3+1;
-        A[2] = (A[1] + A[2])%3+1;
-        A[3] = (A[2] + A[3])%3+1;
-        A[4] = (A[3] + A[4])%3+1;
-        A[5] = (A[4] + A[5])%3+1;
-        A[6] = (A[5] + A[6])%3+1;
-        A[7] = (A[6] + A[7])%3+1;
-        A[8] = (A[7] + A[8])%3+1;
-        A[9] = (A[8] + A[9])%3+1;
-        A[10] = (A[9] + A[10])%3+1;
-        A[11] = (A[10] + A[11])%3+1;
-        A[12] = (A[11] + A[12])%3+1;
-        return testing(depth - 1, A);
-       
-         
-*/
