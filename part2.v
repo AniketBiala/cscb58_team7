@@ -91,37 +91,123 @@ module lab_6
     control c0(.clk(CLOCK_50), .move_r(~KEY[0]), .move_l(~KEY[3]), .move_d(~KEY[1]), .move_u(~KEY[2]), .reset_n(resetn), .ld_x(ld_x), .ld_y(ld_y), .stateNum(stateNum), .reset_game(reset_game), .dingding(counter_for_player), .how_fast(speed1));
    
      
-    // --------------------------------------car movement starts here, for all cars----------------------------------------------------------
+    // --------------------------------------minion movements----------------------------------------------------------
    
-    wire ld_x_car0, ld_y_car0;
-    wire [3:0] stateNum_car0;
-    reg  [6:0] car0_coord = 7'b0101111;
-    wire [2:0] colour_car0;
-    wire [6:0] x_car0;
-    wire [6:0] y_car0;
-    wire writeEn_car0;
-    reg [25:0] counter_for_car0 = 26'b00000000000000000000000001;
-    reg [6:0] init_y_c0 = 7'b0101010;
-    reg [2:0] acolour_c0 = 3'b010;
+    wire minion0_load_x, minion0_load_y;
+    wire [3:0] minion0_stateNum;
+    reg  [6:0] minion0_xStart = 7'b0101111;
+    wire [2:0] minion0_colour;
+    wire [6:0] minion0_xCoord;
+    wire [6:0] minion0_yCoord;
+    wire minion0_write;
+    reg [25:0] minion0_counter = 26'b00000000000000000000000001;
+    reg [6:0] minion0_yStart = 7'b0101010;
+    reg [2:0] minion0_colourChoice = 3'b100;
     // Instansiate datapath                                
-    datapath car_0_d(.clk(CLOCK_50), .ld_x(ld_x_car0), .ld_y(ld_y_car0), .in(  car0_coord), .reset_n(resetn), .x(x_car0), .y(y_car0), .colour(colour_car0), .write(writeEn_car0), .stateNum(stateNum_car0),  .init_y(init_y_c0), .acolour(acolour_c0));
+    datapath minion0_datapath(.clk(CLOCK_50), .ld_x(minion0_load_x), .ld_y(minion0_load_y), .in(  minion0_xStart), .reset_n(resetn), .x(minion0_xCoord), .y(minion0_yCoord), .colour(minion0_colour), .write(minion0_write), .stateNum(minion0_stateNum),  .init_y(minion0_yStart), .acolour(minion0_colourChoice));
    
     // Instansiate FSM control
-    control car_0_c(.clk(CLOCK_50), .move_r(alwaysOne), .move_l(~KEY[2]), .move_d(~KEY[3]),  .move_u(~KEY[0]), .reset_n(resetn), .ld_x(ld_x_car0), .ld_y(ld_y_car0), .stateNum(stateNum_car0), .reset_game(alwaysZero), .dingding(counter_for_car0), .how_fast(speed2));
-    //The outputs are: x_car0, y_car0, colour_car0, writeEn_car0
-    //car0 movement ends here----------------------------------------------------------------------------------------------------
+    control minion0_control(.clk(CLOCK_50), .move_r(alwaysOne), .move_l(~KEY[2]), .move_d(alwaysZero),  .move_u(alwaysZero), .reset_n(resetn), .ld_x(minion0_load_x), .ld_y(minion0_load_y), .stateNum(minion0_stateNum), .reset_game(alwaysZero), .dingding(minion0_counter), .how_fast(speed1));
+    //The outputs are: minion0_xCoord, minion0_yCoord, minion0_colour, minion0_write
 
+	  wire ld_x_car2, ld_y_car2;
+    wire [3:0] stateNum_car2;
+    reg  [6:0] car2_coord = 7'b0110000; // this is init x coord!!!
+    wire [2:0] colour_car2;
+    wire [6:0] x_car2;
+    wire [6:0] y_car2;
+    wire writeEn_car2;
+    reg [25:0] counter_for_car2 = 26'b00000000000000000000000011;
+    reg [6:0] init_y_c2 = 7'b0100100;
+    reg [2:0] acolour_c2 = 3'b100;
+    // Instansiate datapath                                
+    datapath car_2_d(.clk(CLOCK_50), .ld_x(ld_x_car2), .ld_y(ld_y_car2), .in(car2_coord), .reset_n(resetn), .x(x_car2), .y(y_car2), .colour(colour_car2), .write(writeEn_car2), .stateNum(stateNum_car2),  .init_y(init_y_c2), .acolour(acolour_c2));
+   
+    // Instansiate FSM control
+    control car_2_c(.clk(CLOCK_50), .move_r(alwaysZero), .move_l(alwaysOne), .move_d(alwaysZero),  .move_u(alwaysZero), .reset_n(resetn), .ld_x(ld_x_car2), .ld_y(ld_y_car2), .stateNum(stateNum_car2), .reset_game(alwaysZero), .dingding(counter_for_car2), .how_fast(speed1));
+    //car2 movement ends-----------------------------------minion movements-----------------------------------------------------------
+	
+	 wire ld_x_car3, ld_y_car3;
+    wire [3:0] stateNum_car3;
+    reg  [6:0] car3_coord = 7'b0100100; // this is init x coord!!!
+    wire [2:0] colour_car3;
+    wire [6:0] x_car3;
+    wire [6:0] y_car3;
+    wire writeEn_car3;
+    reg [25:0] counter_for_car3 = 26'b00000000000000000000000100;
+    reg [6:0] init_y_c3 = 7'b1000110;
+    reg [2:0] acolour_c3 = 3'b100;
+    // Instansiate datapath                                
+    datapath car_3_d(.clk(CLOCK_50), .ld_x(ld_x_car3), .ld_y(ld_y_car3), .in(car3_coord), .reset_n(resetn), .x(x_car3), .y(y_car3), .colour(colour_car3), .write(writeEn_car3), .stateNum(stateNum_car3),  .init_y(init_y_c3), .acolour(acolour_c3));
+   
+    // Instansiate FSM control
+    control car_3_c(.clk(CLOCK_50), .move_r(alwaysOne), .move_l(alwaysZero), .move_d(alwaysZero),  .move_u(alwaysZero), .reset_n(resetn), .ld_x(ld_x_car3), .ld_y(ld_y_car3), .stateNum(stateNum_car3), .reset_game(alwaysZero), .dingding(counter_for_car3), .how_fast(speed1));
+    //car3 movement ends here----------------------------------------------------------------------------------------------------
+     
+     
+    wire ld_x_car4, ld_y_car4;
+    wire [3:0] stateNum_car4;
+    reg  [6:0] car4_coord = 7'b1010011; // this is init x coord!!!
+    wire [2:0] colour_car4;
+    wire [6:0] x_car4;
+    wire [6:0] y_car4;
+    wire writeEn_car4;
+    reg [25:0] counter_for_car4 = 26'b00000000000000000000000101;
+    reg [6:0] init_y_c4 = 7'b1010010;
+    reg [2:0] acolour_c4 = 3'b100;
+    // Instansiate datapath                                
+    datapath car_4_d(.clk(CLOCK_50), .ld_x(ld_x_car4), .ld_y(ld_y_car4), .in(car4_coord), .reset_n(resetn), .x(x_car4), .y(y_car4), .colour(colour_car4), .write(writeEn_car4), .stateNum(stateNum_car4),  .init_y(init_y_c4), .acolour(acolour_c4));
+   
+    // Instansiate FSM control
+    control car_4_c(.clk(CLOCK_50), .move_r(alwaysOne), .move_l(alwaysZero), .move_d(alwaysZero),  .move_u(alwaysZero), .reset_n(resetn), .ld_x(ld_x_car4), .ld_y(ld_y_car4), .stateNum(stateNum_car4), .reset_game(alwaysZero), .dingding(counter_for_car4), .how_fast(speed1));
+    //car4 movement ends here----------------------------------------------------------------------------------------------------
+     
+     
+    wire ld_x_car5, ld_y_car5;
+    wire [3:0] stateNum_car5;
+    reg  [6:0] car5_coord = 7'b1010001; // this is init x coord!!!
+    wire [2:0] colour_car5;
+    wire [6:0] x_car5;
+    wire [6:0] y_car5;
+    wire writeEn_car5;
+    reg [25:0] counter_for_car5 = 26'b00000000000000000000000110;
+    reg [6:0] init_y_c5 = 7'b1100001;
+    reg [2:0] acolour_c5 = 3'b100;
+    // Instansiate datapath                                
+    datapath car_5_d(.clk(CLOCK_50), .ld_x(ld_x_car5), .ld_y(ld_y_car5), .in(car5_coord), .reset_n(resetn), .x(x_car5), .y(y_car5), .colour(colour_car5), .write(writeEn_car5), .stateNum(stateNum_car5),  .init_y(init_y_c5), .acolour(acolour_c5));
+   
+    // Instansiate FSM control
+    control car_5_c(.clk(CLOCK_50), .move_r(alwaysZero), .move_l(alwaysOne), .move_d(alwaysZero),  .move_u(alwaysZero), .reset_n(resetn), .ld_x(ld_x_car5), .ld_y(ld_y_car5), .stateNum(stateNum_car5), .reset_game(alwaysZero), .dingding(counter_for_car5), .how_fast(speed1));
+    //car5 movement ends here----------------------------------------------------------------------------------------------------
+     
+     
+    wire ld_x_car6, ld_y_car6;
+    wire [3:0] stateNum_car6;
+    reg  [6:0] car6_coord = 7'b0111000; // this is init x coord!!!
+    wire [2:0] colour_car6;
+    wire [6:0] x_car6;
+    wire [6:0] y_car6;
+    wire writeEn_car6;
+    reg [25:0] counter_for_car6 = 26'b00000000000000000000000111;
+    reg [6:0] init_y_c6 = 7'b1101011;
+    reg [2:0] acolour_c6 = 3'b100;
+    // Instansiate datapath                                
+    datapath car_6_d(.clk(CLOCK_50), .ld_x(ld_x_car6), .ld_y(ld_y_car6), .in(car6_coord), .reset_n(resetn), .x(x_car6), .y(y_car6), .colour(colour_car6), .write(writeEn_car6), .stateNum(stateNum_car6),  .init_y(init_y_c6), .acolour(acolour_c6));
+   
+    // Instansiate FSM control
+    control car_6_c(.clk(CLOCK_50), .move_r(alwaysOne), .move_l(alwaysZero), .move_d(alwaysZero),  .move_u(alwaysZero), .reset_n(resetn), .ld_x(ld_x_car6), .ld_y(ld_y_car6), .stateNum(stateNum_car6), .reset_game(alwaysZero), .dingding(counter_for_car6), .how_fast(speed1));
+    //car6 movement ends here-----
 
     wire [9:0] score;
     wire reset_game;
-    scoreCounter player_and_car0(x_player, y_player, x_car0, y_car0, x_car1, y_car1, x_car2, y_car2, x_car3, y_car3, x_car4, y_car4, x_car5, y_car5, x_car6, y_car6, x_car7, y_car7, x_car8, y_car8, x_car9, y_car9, x_car10, y_car10, x_car11, y_car11, x_car12, y_car12, score, reset_game);
+    scoreCounter player_and_car0(x_player, y_player, minion0_xCoord, minion0_yCoord, x_car1, y_car1, x_car2, y_car2, x_car3, y_car3, x_car4, y_car4, x_car5, y_car5, x_car6, y_car6, x_car7, y_car7, x_car8, y_car8, x_car9, y_car9, x_car10, y_car10, x_car11, y_car11, x_car12, y_car12, score, reset_game);
     hex_display first_digit(score, HEX1[6:0], HEX0[6:0]); //notice score is displayed in hexadecimal
      
     //The following for processing player movement and car movement (make sure that only one of play or the car can move on the same clock cycle)
     // If player is moving ,then link the vga to the player, if the car is moving, than link the vga to the car
     // If both of them are moving in the same clock cycle (very unlikely), then move the player
     // edited: mar 20, 5pmreset_n
-    // Notice: writeEn_player is write Enable for player; writeEn_car0 is write enable for car_0
+    // Notice: writeEn_player is write Enable for player; minion0_write is write enable for car_0
     // The following is for choosing to print the player movement or to print the car movement
    
     always @(posedge CLOCK_50)
@@ -133,13 +219,48 @@ module lab_6
                 y <= y_player;
                 colour = colour_player; // Notice: I made the following variable type reg: writeEn, x, y, colour
             end
-        else if (writeEn_car0)    // if player isnt moving, then let the car move
+        else if (minion0_write)    // if player isnt moving, then let the car move
             begin
-                writeEn <= writeEn_car0;    
-                x <= x_car0;                       
-                y <= y_car0;
-                colour <= colour_car0;
+                writeEn <= minion0_write;    
+                x <= minion0_xCoord;                       
+                y <= minion0_yCoord;
+                colour <= minion0_colour;
+            end
+			else if (writeEn_car2)   
+            begin
+                writeEn <= writeEn_car2;    
+                x <= x_car2;                       
+                y <= y_car2;
+                colour <= colour_car2;
+            end
+			else if (writeEn_car3)   
+            begin
+                writeEn <= writeEn_car3;    
+                x <= x_car3;                       
+                y <= y_car3;
+                colour <= colour_car3;
             end   
+        else if (writeEn_car4)  
+            begin
+                writeEn <= writeEn_car4;    
+                x <= x_car4;                       
+                y <= y_car4;
+                colour <= colour_car4;
+            end   
+        else if (writeEn_car5)   
+            begin
+                writeEn <= writeEn_car5;    
+                x <= x_car5;                       
+                y <= y_car5;
+                colour <= colour_car5;
+            end   
+        else if (writeEn_car6)   
+            begin
+                writeEn <= writeEn_car6;    
+                x <= x_car6;                       
+                y <= y_car6;
+                colour <= colour_car6;
+            end  
     end
        
 endmodule
@@ -149,13 +270,13 @@ endmodule
 //outputs are score and reset,
 //if reset is 1, this means the play crashed into a car and game should be reset
 module scoreCounter(x_player, y_player,
-x_car0, y_car0, x_car1, y_car1, x_car2, y_car2, x_car3, y_car3, x_car4, y_car4, x_car5, y_car5, x_car6, y_car6,
+minion0_xCoord, minion0_yCoord, x_car1, y_car1, x_car2, y_car2, x_car3, y_car3, x_car4, y_car4, x_car5, y_car5, x_car6, y_car6,
 x_car7, y_car7, x_car8, y_car8, x_car9, y_car9, x_car10, y_car10, x_car11, y_car11, x_car12, y_car12,
 score, reset_game);
     input [6:0] x_player;
     input [6:0] y_player;
-    input [6:0] x_car0;
-    input [6:0] y_car0;
+    input [6:0] minion0_xCoord;
+    input [6:0] minion0_yCoord;
     input [6:0] x_car1;
     input [6:0] y_car1;
     input [6:0] x_car2;
@@ -196,7 +317,7 @@ score, reset_game);
 //			   reset_game = 1'b1;
 //				score = score;
 //				end
-        else if ((x_player == x_car0 && y_player == y_car0) || (x_player == x_car1 && y_player == y_car1) ||
+        else if ((x_player == minion0_xCoord && y_player == minion0_yCoord) || (x_player == x_car1 && y_player == y_car1) ||
           (x_player == x_car2 && y_player == y_car2) || (x_player == x_car3 && y_player == y_car3) ||
           (x_player == x_car4 && y_player == y_car4) || (x_player == x_car5 && y_player == y_car5) ||
           (x_player == x_car6 && y_player == y_car6) || (x_player == x_car7 && y_player == y_car7) ||
@@ -255,7 +376,7 @@ module control(clk, move_r, move_l, move_d, move_u, reset_n, ld_x, ld_y, stateNu
 		else
 		   speed <= 26'b01011111010111100001;
 	 end
-	 RateDividerForCar player_counter1(clk, press_now, reset_n, speed);
+	 RateDivider player_counter1(clk, press_now, reset_n, speed);
 	 
     assign result_press_now = (press_now == dingding) ? 1 : 0;
    
@@ -375,14 +496,14 @@ module datapath(clk, ld_x, ld_y, in, reset_n, x, y, colour, stateNum, write, ini
 
     always @(posedge clk)
     begin
-//        if(!reset_n)
-//        begin
-//            x <= 7'b0000000;
-//            y <= 6'b000000;
-//            colour <= 3'b000;
-//        end
-//        else
-//        begin       
+        if(!reset_n)
+        begin
+            x <= 7'b0000000;
+            y <= 6'b000000;
+            colour <= 3'b000;
+        end
+        else
+        begin       
             if(ld_x)
                 begin
                     x[7:0] <= in;
@@ -404,32 +525,60 @@ module datapath(clk, ld_x, ld_y, in, reset_n, x, y, colour, stateNum, write, ini
             // The following is for moving right
             else if(stateNum == 4'b0100)   
                 begin
-               
-                    x[7:0] <= x + 8'b00000001;
-                    colour <= acolour;
-                    write <= 1'b1;
-                end
+						  if (x == 8'b01111110)
+					       begin
+								x <= 8'b00000000;
+								colour <= acolour;
+							  write <= 1'b1;
+							 end
+						  else
+						  begin
+							  x[7:0] <= x + 8'b00000001;
+							  colour <= acolour;
+							  write <= 1'b1;
+							end
+						 end
                
             // The following is for moving left
             else if(stateNum == 4'b0010)   
                 begin
-               
+						if (x == 8'b0000000)
+					       begin
+								x <= 8'b01111110;
+								colour <= acolour;
+							  write <= 1'b1;
+							 end
+						  else
+						  begin
                     x[7:0] <= x - 8'b00000001;
                     colour <= acolour;
                     write <= 1'b1;
+						  end
                 end
                
             // The following is for moving down
             else if(stateNum == 4'b0011)
 					 begin
 							begin
-							if ((x % 8'b1111110) == 8'b1) //126
+							if (x == 8'b01111110 && (y <= 7'b1110100 && y >= 7'b1010101)) // only allow down at ladder - bottom row 
 								begin
 						  
-								  y[6:0] <= y + 6'b000001;
+								  y[6:0] <= y + 7'b0000001;
 								  colour <= acolour;
 								  write <= 1'b1;
 								end
+							else if (x == 8'b00010000 && (y <= 7'b1010100 && y >= 7'b0111000)) // only allow up at ladder - middle row
+								begin
+									y[6:0] <= y + 7'b0000001;
+									colour <= acolour;
+									write <= 1'b1;
+								end
+							else if (x == 8'b01111110 && (y <= 7'b0110111 && y >= 7'b0011010)) // only allow up at ladder - bottom row 
+								begin
+								  y[6:0] <= y + 7'b0000001;
+								  colour <= acolour;
+								  write <= 1'b1;
+								end	
 							else
 							      y[6:0] <= y; 
 							      colour <= acolour;		
@@ -442,9 +591,21 @@ module datapath(clk, ld_x, ld_y, in, reset_n, x, y, colour, stateNum, write, ini
                 begin
                
 							begin
-							if ((x % 8'b1111110) == 8'b1) //126
+							if (x == 8'b01111110 && (y <= 7'b1110101 && y >= 7'b1010110)) // only allow up at ladder - bottom row 
 								begin
 						  
+								  y[6:0] <= y - 7'b0000001;
+								  colour <= acolour;
+								  write <= 1'b1;
+								end
+							else if (x == 8'b00010000 && (y <= 7'b1010110 && y >= 7'b0111001)) // only allow up at ladder - middle row
+								begin
+									y[6:0] <= y - 7'b0000001;
+									colour <= acolour;
+									write <= 1'b1;
+								end
+							else if (x == 8'b01111110 && (y <= 7'b0111101 && y >= 7'b0011011)) // only allow up at ladder - bottom row 
+								begin
 								  y[6:0] <= y - 7'b0000001;
 								  colour <= acolour;
 								  write <= 1'b1;
@@ -462,13 +623,13 @@ module datapath(clk, ld_x, ld_y, in, reset_n, x, y, colour, stateNum, write, ini
                     write <= 1'b0;
                 end
                
-       // end
+        end
     end
    
 endmodule
    
    
-module RateDividerForCar (clock, q, Clear_b, how_speedy);  // Note that car is 4 times faster than the player
+module RateDivider (clock, q, Clear_b, how_speedy);  // Note that car is 4 times faster than the player
     input [0:0] clock;
     input [0:0] Clear_b;
 	 input [25:0] how_speedy;
