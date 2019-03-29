@@ -182,7 +182,7 @@ module lab_6
     wire [4:0] score;
     wire reset_game;
     collisionLogic player_and_car0(x_player, y_player, minion0_xCoord, minion0_yCoord, minion1_xCoord, minion1_yCoord, minion2_xCoord, minion2_yCoord, minion3_xCoord, minion3_yCoord, minion4_xCoord, minion4_yCoord, minion5_xCoord, minion5_yCoord, score, reset_game);
-    hex_display first_digit(5'b11111, HEX1[6:0], HEX0[6:0]); //notice score is displayed in hexadecimal
+    hex_display first_digit(score, HEX1[6:0], HEX0[6:0]); //notice score is displayed in hexadecimal
    
 	 // Processes player/minion movement and determines whether or not player is moving
     always @(posedge CLOCK_50)
@@ -262,10 +262,10 @@ module collisionLogic(x_player, y_player, minion0_xCoord, minion0_yCoord, minion
 	
     always @(*) //Notice it is not positive edge
     begin
-        if (y_player == 7'b0011010) // When player reaches the top of the screen
+        if (y_player == 7'b0011010 && (x_player >= 7'b0000000 && x_player <= 7'b00010100)) // When player reaches the top of the screen and passes the boss
             begin // it is going into this state
                 score = score + 5'b00001;
-                reset_game = 1'b0;
+                reset_game = 1'b1;
             end
 //		  else if (y_player == 7'b1110001)   //Change this!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //				begin
@@ -461,7 +461,7 @@ module datapath(clk, ld_x, ld_y, in, reset_n, x, y, colour, stateNum, write, ini
                     y <= init_y;
                     write <= 1'b0;
                 end
-            else if(ld_y)  // !!!!!!!!!!!!!!!!!!!!!!--- this is where x is being wrapped --------!!!possibly....
+            else if(ld_y)  
                 begin
                     write <= 1'b0;
                 end
