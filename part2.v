@@ -179,28 +179,22 @@ module lab_6
     
 	 // -----------------------------------minion movements-----------------------------------------------------------
 
-    wire [9:0] score;
+    wire [4:0] score;
     wire reset_game;
-    scoreCounter player_and_car0(x_player, y_player, minion0_xCoord, minion0_yCoord, x_car1, y_car1, minion1_xCoord, minion1_yCoord, minion2_xCoord, minion2_yCoord, minion3_xCoord, minion3_yCoord, minion4_xCoord, minion4_yCoord, minion5_xCoord, minion5_yCoord, x_car7, y_car7, x_car8, y_car8, x_car9, y_car9, x_car10, y_car10, x_car11, y_car11, x_car12, y_car12, score, reset_game);
-    hex_display first_digit(score, HEX1[6:0], HEX0[6:0]); //notice score is displayed in hexadecimal
-     
-    //The following for processing player movement and car movement (make sure that only one of play or the car can move on the same clock cycle)
-    // If player is moving ,then link the vga to the player, if the car is moving, than link the vga to the car
-    // If both of them are moving in the same clock cycle (very unlikely), then move the player
-    // edited: mar 20, 5pmreset_n
-    // Notice: writeEn_player is write Enable for player; minion0_write is write enable for car_0
-    // The following is for choosing to print the player movement or to print the car movement
+    collisionLogic player_and_car0(x_player, y_player, minion0_xCoord, minion0_yCoord, minion1_xCoord, minion1_yCoord, minion2_xCoord, minion2_yCoord, minion3_xCoord, minion3_yCoord, minion4_xCoord, minion4_yCoord, minion5_xCoord, minion5_yCoord, score, reset_game);
+    hex_display first_digit(5'b11111, HEX1[6:0], HEX0[6:0]); //notice score is displayed in hexadecimal
    
+	 // Processes player/minion movement and determines whether or not player is moving
     always @(posedge CLOCK_50)
     begin
         if(writeEn_player) 
             begin
-                writeEn <= writeEn_player;   //  Do I use   <=   or   =   ????? writeEn, x, y and colour are originally type wire, but I need to make them type reg???  ????????????????????????????????
+                writeEn <= writeEn_player;
                 x <= x_player;       
                 y <= y_player;
-                colour = colour_player; // Notice: I made the following variable type reg: writeEn, x, y, colour
+                colour = colour_player;
             end
-        else if (minion0_write)    // if player isnt moving, then let the car move
+        else if (minion0_write) // check for minion movements - going to be basically always
             begin
                 writeEn <= minion0_write;    
                 x <= minion0_xCoord;                       
@@ -243,23 +237,15 @@ module lab_6
                 colour <= minion5_colour;
             end  
     end
-       
 endmodule
 
 
-//You need to extend the parameter of this module such that all cood. of all cars are inputed into this module
-//outputs are score and reset,
-//if reset is 1, this means the play crashed into a car and game should be reset
-module scoreCounter(x_player, y_player,
-minion0_xCoord, minion0_yCoord, x_car1, y_car1, minion1_xCoord, minion1_yCoord, minion2_xCoord, minion2_yCoord, minion3_xCoord, minion3_yCoord, minion4_xCoord, minion4_yCoord, minion5_xCoord, minion5_yCoord,
-x_car7, y_car7, x_car8, y_car8, x_car9, y_car9, x_car10, y_car10, x_car11, y_car11, x_car12, y_car12,
-score, reset_game);
+// If reset is given value 1, player hit a minion and resets game setup
+module collisionLogic(x_player, y_player, minion0_xCoord, minion0_yCoord, minion1_xCoord, minion1_yCoord, minion2_xCoord, minion2_yCoord, minion3_xCoord, minion3_yCoord, minion4_xCoord, minion4_yCoord, minion5_xCoord, minion5_yCoord, score, reset_game);
     input [6:0] x_player;
     input [6:0] y_player;
     input [6:0] minion0_xCoord;
     input [6:0] minion0_yCoord;
-    input [6:0] x_car1;
-    input [6:0] y_car1;
     input [6:0] minion1_xCoord;
     input [6:0] minion1_yCoord;
     input [6:0] minion2_xCoord;
@@ -270,50 +256,35 @@ score, reset_game);
     input [6:0] minion4_yCoord;
     input [6:0] minion5_xCoord;
     input [6:0] minion5_yCoord;
-    input [6:0] x_car7;
-    input [6:0] y_car7;
-    input [6:0] x_car8;
-    input [6:0] y_car8;
-    input [6:0] x_car9;
-    input [6:0] y_car9;
-    input [6:0] x_car10;
-    input [6:0] y_car10;
-    input [6:0] x_car11;
-    input [6:0] y_car11;
-    input [6:0] x_car12;
-    input [6:0] y_car12;
-    output reg [9:0] score;
+    output reg [4:0] score;
     output reg reset_game;
     
 	
     always @(*) //Notice it is not positive edge
     begin
-        if (y_player == 7'b0000011) // When player reaches the top of the screen
+        if (y_player == 7'b0011010) // When player reaches the top of the screen
             begin // it is going into this state
-                score = score + 1'b1;
-                reset_game = 1'b1;
+                score = score + 5'b00001;
+                reset_game = 1'b0;
             end
 //		  else if (y_player == 7'b1110001)   //Change this!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //				begin
 //			   reset_game = 1'b1;
 //				score = score;
 //				end
-        else if ((x_player == minion0_xCoord && y_player == minion0_yCoord) || (x_player == x_car1 && y_player == y_car1) ||
-          (x_player == minion1_xCoord && y_player == minion1_yCoord) || (x_player == minion2_xCoord && y_player == minion2_yCoord) ||
-          (x_player == minion3_xCoord && y_player == minion3_yCoord) || (x_player == minion4_xCoord && y_player == minion4_yCoord) ||
-          (x_player == minion5_xCoord && y_player == minion5_yCoord) || (x_player == x_car7 && y_player == y_car7) ||
-          (x_player == x_car8 && y_player == y_car8) || (x_player == x_car9 && y_player == y_car9) ||
-          (x_player == x_car10 && y_player == y_car10) || (x_player == x_car11 && y_player == y_car11) ||
-          (x_player == x_car12 && y_player == y_car12) )  // player collide with car (any of the 13 cars)
+        else if ((x_player == minion0_xCoord && y_player == minion0_yCoord) || (x_player == minion1_xCoord && y_player == minion1_yCoord) ||
+		           (x_player == minion2_xCoord && y_player == minion2_yCoord) || (x_player == minion3_xCoord && y_player == minion3_yCoord) ||
+					  (x_player == minion4_xCoord && y_player == minion4_yCoord) || (x_player == minion5_xCoord && y_player == minion5_yCoord))  // player collide with any minion
             begin
                      reset_game = 1'b1;
-                     score = 1'b0;
+                     score = 5'b00000;
             end
-			
         else
+		  begin
             reset_game = 1'b0;
+				score = score;
+		  end
     end
-
 endmodule				  
 
 
@@ -446,9 +417,7 @@ module control(clk, move_r, move_l, move_d, move_u, reset_n, ld_x, ld_y, stateNu
                
             after_drawing: begin
                 stateNum = 4'b1000;
-                end
-           
-           
+                end  
         endcase
     end
 
@@ -459,7 +428,6 @@ module control(clk, move_r, move_l, move_d, move_u, reset_n, ld_x, ld_y, stateNu
         else
             curr <= next;
     end
-
 endmodule
 
 // can't exactly fix horizontal movements whilst on ladders w/o creating an entirely new datapath module
@@ -505,7 +473,7 @@ module datapath(clk, ld_x, ld_y, in, reset_n, x, y, colour, stateNum, write, ini
                     write <= 1'b1;
                 end
                
-            // The following is for moving right
+            // Moving Right Logic
             else if(stateNum == 4'b0100)   
                 begin
 						  if (x == 8'b01111110)
@@ -522,7 +490,7 @@ module datapath(clk, ld_x, ld_y, in, reset_n, x, y, colour, stateNum, write, ini
 						  end
 						 end
                
-            // The following is for moving left
+            // Moving Left Logic
             else if(stateNum == 4'b0010)   
                 begin
 						if (x == 8'b0000000)
@@ -539,7 +507,7 @@ module datapath(clk, ld_x, ld_y, in, reset_n, x, y, colour, stateNum, write, ini
 						  end
                 end
                
-            // The following is for moving down
+            // Moving Down Logic
             else if(stateNum == 4'b0011)
 					 begin
 							begin
@@ -569,10 +537,10 @@ module datapath(clk, ld_x, ld_y, in, reset_n, x, y, colour, stateNum, write, ini
 							
 							end
                 end
-               
-            else if(stateNum == 4'b1001)//for moving up
+					 
+            // Moving Up Logic
+            else if(stateNum == 4'b1001)
                 begin
-               
 							begin
 							if (x == 8'b01111110 && (y <= 7'b1110101 && y >= 7'b1010110)) // only allow up at ladder - bottom row 
 								begin
@@ -597,7 +565,6 @@ module datapath(clk, ld_x, ld_y, in, reset_n, x, y, colour, stateNum, write, ini
 							      y[6:0] <= y; 
 							      colour <= acolour;		
 									write <= 1'b1;
-							
 							end
                 end
                
@@ -605,10 +572,8 @@ module datapath(clk, ld_x, ld_y, in, reset_n, x, y, colour, stateNum, write, ini
                 begin
                     write <= 1'b0;
                 end
-               
         end
     end
-   
 endmodule
    
    
@@ -631,12 +596,10 @@ module RateDivider (clock, q, Clear_b, how_speedy);  // Note that car is 4 times
 endmodule
 
 
-
-
 // The hex display for showing the level of the player
 module hex_display(IN, OUT1, OUT2);
    input [4:0] IN;
-    output reg [7:0] OUT1, OUT2;
+   output reg [6:0] OUT1, OUT2;
      always @(*)
      begin
         case(IN[4:0])
@@ -807,6 +770,5 @@ module hex_display(IN, OUT1, OUT2);
                     OUT2 = 7'b1111111;
                 end
         endcase
-
     end
 endmodule
