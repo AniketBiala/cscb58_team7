@@ -95,112 +95,93 @@ module lab_6
    
     wire minion0_load_x, minion0_load_y;
     wire [3:0] minion0_stateNum;
-    reg  [6:0] minion0_xStart = 7'b0101111;
     wire [2:0] minion0_colour;
     wire [6:0] minion0_xCoord;
     wire [6:0] minion0_yCoord;
     wire minion0_write;
     reg [25:0] minion0_counter = 26'b00000000000000000000000001;
+	 reg [6:0] minion0_xStart = 7'b0101111;
     reg [6:0] minion0_yStart = 7'b0101010;
     reg [2:0] minion0_colourChoice = 3'b100;
-    // Instansiate datapath                                
+	 
     datapath minion0_datapath(.clk(CLOCK_50), .ld_x(minion0_load_x), .ld_y(minion0_load_y), .in(  minion0_xStart), .reset_n(resetn), .x(minion0_xCoord), .y(minion0_yCoord), .colour(minion0_colour), .write(minion0_write), .stateNum(minion0_stateNum),  .init_y(minion0_yStart), .acolour(minion0_colourChoice));
-   
-    // Instansiate FSM control
     control minion0_control(.clk(CLOCK_50), .move_r(alwaysOne), .move_l(~KEY[2]), .move_d(alwaysZero),  .move_u(alwaysZero), .reset_n(resetn), .ld_x(minion0_load_x), .ld_y(minion0_load_y), .stateNum(minion0_stateNum), .reset_game(alwaysZero), .dingding(minion0_counter), .how_fast(speed1));
-    //The outputs are: minion0_xCoord, minion0_yCoord, minion0_colour, minion0_write
 
-	  wire ld_x_car2, ld_y_car2;
-    wire [3:0] stateNum_car2;
-    reg  [6:0] car2_coord = 7'b0110000; // this is init x coord!!!
-    wire [2:0] colour_car2;
-    wire [6:0] x_car2;
-    wire [6:0] y_car2;
-    wire writeEn_car2;
-    reg [25:0] counter_for_car2 = 26'b00000000000000000000000011;
-    reg [6:0] init_y_c2 = 7'b0100100;
-    reg [2:0] acolour_c2 = 3'b100;
-    // Instansiate datapath                                
-    datapath car_2_d(.clk(CLOCK_50), .ld_x(ld_x_car2), .ld_y(ld_y_car2), .in(car2_coord), .reset_n(resetn), .x(x_car2), .y(y_car2), .colour(colour_car2), .write(writeEn_car2), .stateNum(stateNum_car2),  .init_y(init_y_c2), .acolour(acolour_c2));
-   
-    // Instansiate FSM control
-    control car_2_c(.clk(CLOCK_50), .move_r(alwaysZero), .move_l(alwaysOne), .move_d(alwaysZero),  .move_u(alwaysZero), .reset_n(resetn), .ld_x(ld_x_car2), .ld_y(ld_y_car2), .stateNum(stateNum_car2), .reset_game(alwaysZero), .dingding(counter_for_car2), .how_fast(speed1));
-    //car2 movement ends-----------------------------------minion movements-----------------------------------------------------------
+	 wire minion1_load_x, minion1_load_y;
+    wire [3:0] minion1_stateNum;
+    wire [2:0] minion1_colour;
+    wire [6:0] minion1_xCoord;
+    wire [6:0] minion1_yCoord;
+    wire minion1_write;
+    reg [25:0] minion1_counter = 26'b00000000000000000000000011;
+	 reg  [6:0] minion1_xStart = 7'b0110000;
+    reg [6:0] minion1_yStart = 7'b0100100;
+    reg [2:0] minion1_colourChoice = 3'b100;
+	 
+    datapath minion1_datapath(.clk(CLOCK_50), .ld_x(minion1_load_x), .ld_y(minion1_load_y), .in(minion1_xStart), .reset_n(resetn), .x(minion1_xCoord), .y(minion1_yCoord), .colour(minion1_colour), .write(minion1_write), .stateNum(minion1_stateNum),  .init_y(minion1_yStart), .acolour(minion1_colourChoice));
+    control minion1_control(.clk(CLOCK_50), .move_r(alwaysZero), .move_l(alwaysOne), .move_d(alwaysZero),  .move_u(alwaysZero), .reset_n(resetn), .ld_x(minion1_load_x), .ld_y(minion1_load_y), .stateNum(minion1_stateNum), .reset_game(alwaysZero), .dingding(minion1_counter), .how_fast(speed1));
 	
-	 wire ld_x_car3, ld_y_car3;
-    wire [3:0] stateNum_car3;
-    reg  [6:0] car3_coord = 7'b0100100; // this is init x coord!!!
-    wire [2:0] colour_car3;
-    wire [6:0] x_car3;
-    wire [6:0] y_car3;
-    wire writeEn_car3;
-    reg [25:0] counter_for_car3 = 26'b00000000000000000000000100;
-    reg [6:0] init_y_c3 = 7'b1000110;
-    reg [2:0] acolour_c3 = 3'b100;
-    // Instansiate datapath                                
-    datapath car_3_d(.clk(CLOCK_50), .ld_x(ld_x_car3), .ld_y(ld_y_car3), .in(car3_coord), .reset_n(resetn), .x(x_car3), .y(y_car3), .colour(colour_car3), .write(writeEn_car3), .stateNum(stateNum_car3),  .init_y(init_y_c3), .acolour(acolour_c3));
-   
-    // Instansiate FSM control
-    control car_3_c(.clk(CLOCK_50), .move_r(alwaysOne), .move_l(alwaysZero), .move_d(alwaysZero),  .move_u(alwaysZero), .reset_n(resetn), .ld_x(ld_x_car3), .ld_y(ld_y_car3), .stateNum(stateNum_car3), .reset_game(alwaysZero), .dingding(counter_for_car3), .how_fast(speed1));
-    //car3 movement ends here----------------------------------------------------------------------------------------------------
-     
-     
-    wire ld_x_car4, ld_y_car4;
-    wire [3:0] stateNum_car4;
-    reg  [6:0] car4_coord = 7'b1010011; // this is init x coord!!!
-    wire [2:0] colour_car4;
-    wire [6:0] x_car4;
-    wire [6:0] y_car4;
-    wire writeEn_car4;
-    reg [25:0] counter_for_car4 = 26'b00000000000000000000000101;
-    reg [6:0] init_y_c4 = 7'b1010010;
-    reg [2:0] acolour_c4 = 3'b100;
-    // Instansiate datapath                                
-    datapath car_4_d(.clk(CLOCK_50), .ld_x(ld_x_car4), .ld_y(ld_y_car4), .in(car4_coord), .reset_n(resetn), .x(x_car4), .y(y_car4), .colour(colour_car4), .write(writeEn_car4), .stateNum(stateNum_car4),  .init_y(init_y_c4), .acolour(acolour_c4));
-   
-    // Instansiate FSM control
-    control car_4_c(.clk(CLOCK_50), .move_r(alwaysOne), .move_l(alwaysZero), .move_d(alwaysZero),  .move_u(alwaysZero), .reset_n(resetn), .ld_x(ld_x_car4), .ld_y(ld_y_car4), .stateNum(stateNum_car4), .reset_game(alwaysZero), .dingding(counter_for_car4), .how_fast(speed1));
-    //car4 movement ends here----------------------------------------------------------------------------------------------------
-     
-     
-    wire ld_x_car5, ld_y_car5;
-    wire [3:0] stateNum_car5;
-    reg  [6:0] car5_coord = 7'b1010001; // this is init x coord!!!
-    wire [2:0] colour_car5;
-    wire [6:0] x_car5;
-    wire [6:0] y_car5;
-    wire writeEn_car5;
-    reg [25:0] counter_for_car5 = 26'b00000000000000000000000110;
-    reg [6:0] init_y_c5 = 7'b1100001;
-    reg [2:0] acolour_c5 = 3'b100;
-    // Instansiate datapath                                
-    datapath car_5_d(.clk(CLOCK_50), .ld_x(ld_x_car5), .ld_y(ld_y_car5), .in(car5_coord), .reset_n(resetn), .x(x_car5), .y(y_car5), .colour(colour_car5), .write(writeEn_car5), .stateNum(stateNum_car5),  .init_y(init_y_c5), .acolour(acolour_c5));
-   
-    // Instansiate FSM control
-    control car_5_c(.clk(CLOCK_50), .move_r(alwaysZero), .move_l(alwaysOne), .move_d(alwaysZero),  .move_u(alwaysZero), .reset_n(resetn), .ld_x(ld_x_car5), .ld_y(ld_y_car5), .stateNum(stateNum_car5), .reset_game(alwaysZero), .dingding(counter_for_car5), .how_fast(speed1));
-    //car5 movement ends here----------------------------------------------------------------------------------------------------
-     
-     
-    wire ld_x_car6, ld_y_car6;
-    wire [3:0] stateNum_car6;
-    reg  [6:0] car6_coord = 7'b0111000; // this is init x coord!!!
-    wire [2:0] colour_car6;
-    wire [6:0] x_car6;
-    wire [6:0] y_car6;
-    wire writeEn_car6;
-    reg [25:0] counter_for_car6 = 26'b00000000000000000000000111;
-    reg [6:0] init_y_c6 = 7'b1101011;
-    reg [2:0] acolour_c6 = 3'b100;
-    // Instansiate datapath                                
-    datapath car_6_d(.clk(CLOCK_50), .ld_x(ld_x_car6), .ld_y(ld_y_car6), .in(car6_coord), .reset_n(resetn), .x(x_car6), .y(y_car6), .colour(colour_car6), .write(writeEn_car6), .stateNum(stateNum_car6),  .init_y(init_y_c6), .acolour(acolour_c6));
-   
-    // Instansiate FSM control
-    control car_6_c(.clk(CLOCK_50), .move_r(alwaysOne), .move_l(alwaysZero), .move_d(alwaysZero),  .move_u(alwaysZero), .reset_n(resetn), .ld_x(ld_x_car6), .ld_y(ld_y_car6), .stateNum(stateNum_car6), .reset_game(alwaysZero), .dingding(counter_for_car6), .how_fast(speed1));
-    //car6 movement ends here-----
+	 wire minion2_load_x, minion2_load_y;
+    wire [3:0] minion2_stateNum;
+    wire [2:0] minion2_colour;
+    wire [6:0] minion2_xCoord;
+    wire [6:0] minion2_yCoord;
+    wire minion2_write;
+    reg [25:0] minion2_counter = 26'b00000000000000000000000100;
+	 reg  [6:0] minion2_xStart = 7'b0100100;
+    reg [6:0] minion2_yStart = 7'b1000110;
+    reg [2:0] minion2_colourChoice = 3'b100;
+                            
+    datapath minion2_datapath(.clk(CLOCK_50), .ld_x(minion2_load_x), .ld_y(minion2_load_y), .in(minion2_xStart), .reset_n(resetn), .x(minion2_xCoord), .y(minion2_yCoord), .colour(minion2_colour), .write(minion2_write), .stateNum(minion2_stateNum),  .init_y(minion2_yStart), .acolour(minion2_colourChoice));
+    control minion2_control(.clk(CLOCK_50), .move_r(alwaysOne), .move_l(alwaysZero), .move_d(alwaysZero),  .move_u(alwaysZero), .reset_n(resetn), .ld_x(minion2_load_x), .ld_y(minion2_load_y), .stateNum(minion2_stateNum), .reset_game(alwaysZero), .dingding(minion2_counter), .how_fast(speed1));
+    
+    wire minion3_load_x, minion3_load_y;
+    wire [3:0] minion3_stateNum;
+    wire [2:0] minion3_colour;
+    wire [6:0] minion3_xCoord;
+    wire [6:0] minion3_yCoord;
+    wire minion3_write;
+    reg [25:0] minion3_counter = 26'b00000000000000000000000101;
+	 reg  [6:0] minion3_xStart = 7'b1010011;
+    reg [6:0] minion3_yStart = 7'b1010010;
+    reg [2:0] minion3_colourChoice = 3'b100;
+                              
+    datapath minion3_datapath(.clk(CLOCK_50), .ld_x(minion3_load_x), .ld_y(minion3_load_y), .in(minion3_xStart), .reset_n(resetn), .x(minion3_xCoord), .y(minion3_yCoord), .colour(minion3_colour), .write(minion3_write), .stateNum(minion3_stateNum),  .init_y(minion3_yStart), .acolour(minion3_colourChoice));
+    control minion3_control(.clk(CLOCK_50), .move_r(alwaysOne), .move_l(alwaysZero), .move_d(alwaysZero),  .move_u(alwaysZero), .reset_n(resetn), .ld_x(minion3_load_x), .ld_y(minion3_load_y), .stateNum(minion3_stateNum), .reset_game(alwaysZero), .dingding(minion3_counter), .how_fast(speed1));
+
+    wire minion4_load_x, minion4_load_y;
+    wire [3:0] minion4_stateNum;
+    wire [2:0] minion4_colour;
+    wire [6:0] minion4_xCoord;
+    wire [6:0] minion4_yCoord;
+    wire minion4_write;
+    reg [25:0] minion4_counter = 26'b00000000000000000000000110;
+	 reg  [6:0] minion4_xStart = 7'b1010001;
+    reg [6:0] minion4_yStart = 7'b1100001;
+    reg [2:0] minion4_colourChoice = 3'b100;
+                              
+    datapath minion4_datapath(.clk(CLOCK_50), .ld_x(minion4_load_x), .ld_y(minion4_load_y), .in(minion4_xStart), .reset_n(resetn), .x(minion4_xCoord), .y(minion4_yCoord), .colour(minion4_colour), .write(minion4_write), .stateNum(minion4_stateNum),  .init_y(minion4_yStart), .acolour(minion4_colourChoice));
+    control minion4_control(.clk(CLOCK_50), .move_r(alwaysZero), .move_l(alwaysOne), .move_d(alwaysZero),  .move_u(alwaysZero), .reset_n(resetn), .ld_x(minion4_load_x), .ld_y(minion4_load_y), .stateNum(minion4_stateNum), .reset_game(alwaysZero), .dingding(minion4_counter), .how_fast(speed1));
+
+    wire minion5_load_x, minion5_load_y;
+    wire [3:0] minion5_stateNum;
+    wire [2:0] minion5_colour;
+    wire [6:0] minion5_xCoord;
+    wire [6:0] minion5_yCoord;
+    wire minion5_write;
+    reg [25:0] minion5_counter = 26'b00000000000000000000000111;
+	 reg  [6:0] minion5_xStart = 7'b0111000;
+    reg [6:0] minion5_yStart = 7'b1101011;
+    reg [2:0] minion5_colourChoice = 3'b100;
+                            
+    datapath minion5_datapath(.clk(CLOCK_50), .ld_x(minion5_load_x), .ld_y(minion5_load_y), .in(minion5_xStart), .reset_n(resetn), .x(minion5_xCoord), .y(minion5_yCoord), .colour(minion5_colour), .write(minion5_write), .stateNum(minion5_stateNum),  .init_y(minion5_yStart), .acolour(minion5_colourChoice));
+    control minion5_control(.clk(CLOCK_50), .move_r(alwaysOne), .move_l(alwaysZero), .move_d(alwaysZero),  .move_u(alwaysZero), .reset_n(resetn), .ld_x(minion5_load_x), .ld_y(minion5_load_y), .stateNum(minion5_stateNum), .reset_game(alwaysZero), .dingding(minion5_counter), .how_fast(speed1));
+    
+	 // -----------------------------------minion movements-----------------------------------------------------------
 
     wire [9:0] score;
     wire reset_game;
-    scoreCounter player_and_car0(x_player, y_player, minion0_xCoord, minion0_yCoord, x_car1, y_car1, x_car2, y_car2, x_car3, y_car3, x_car4, y_car4, x_car5, y_car5, x_car6, y_car6, x_car7, y_car7, x_car8, y_car8, x_car9, y_car9, x_car10, y_car10, x_car11, y_car11, x_car12, y_car12, score, reset_game);
+    scoreCounter player_and_car0(x_player, y_player, minion0_xCoord, minion0_yCoord, x_car1, y_car1, minion1_xCoord, minion1_yCoord, minion2_xCoord, minion2_yCoord, minion3_xCoord, minion3_yCoord, minion4_xCoord, minion4_yCoord, minion5_xCoord, minion5_yCoord, x_car7, y_car7, x_car8, y_car8, x_car9, y_car9, x_car10, y_car10, x_car11, y_car11, x_car12, y_car12, score, reset_game);
     hex_display first_digit(score, HEX1[6:0], HEX0[6:0]); //notice score is displayed in hexadecimal
      
     //The following for processing player movement and car movement (make sure that only one of play or the car can move on the same clock cycle)
@@ -226,40 +207,40 @@ module lab_6
                 y <= minion0_yCoord;
                 colour <= minion0_colour;
             end
-			else if (writeEn_car2)   
+			else if (minion1_write)   
             begin
-                writeEn <= writeEn_car2;    
-                x <= x_car2;                       
-                y <= y_car2;
-                colour <= colour_car2;
+                writeEn <= minion1_write;    
+                x <= minion1_xCoord;                       
+                y <= minion1_yCoord;
+                colour <= minion1_colour;
             end
-			else if (writeEn_car3)   
+			else if (minion2_write)   
             begin
-                writeEn <= writeEn_car3;    
-                x <= x_car3;                       
-                y <= y_car3;
-                colour <= colour_car3;
+                writeEn <= minion2_write;    
+                x <= minion2_xCoord;                       
+                y <= minion2_yCoord;
+                colour <= minion2_colour;
             end   
-        else if (writeEn_car4)  
+        else if (minion3_write)  
             begin
-                writeEn <= writeEn_car4;    
-                x <= x_car4;                       
-                y <= y_car4;
-                colour <= colour_car4;
+                writeEn <= minion3_write;    
+                x <= minion3_xCoord;                       
+                y <= minion3_yCoord;
+                colour <= minion3_colour;
             end   
-        else if (writeEn_car5)   
+        else if (minion4_write)   
             begin
-                writeEn <= writeEn_car5;    
-                x <= x_car5;                       
-                y <= y_car5;
-                colour <= colour_car5;
+                writeEn <= minion4_write;    
+                x <= minion4_xCoord;                       
+                y <= minion4_yCoord;
+                colour <= minion4_colour;
             end   
-        else if (writeEn_car6)   
+        else if (minion5_write)   
             begin
-                writeEn <= writeEn_car6;    
-                x <= x_car6;                       
-                y <= y_car6;
-                colour <= colour_car6;
+                writeEn <= minion5_write;    
+                x <= minion5_xCoord;                       
+                y <= minion5_yCoord;
+                colour <= minion5_colour;
             end  
     end
        
@@ -270,7 +251,7 @@ endmodule
 //outputs are score and reset,
 //if reset is 1, this means the play crashed into a car and game should be reset
 module scoreCounter(x_player, y_player,
-minion0_xCoord, minion0_yCoord, x_car1, y_car1, x_car2, y_car2, x_car3, y_car3, x_car4, y_car4, x_car5, y_car5, x_car6, y_car6,
+minion0_xCoord, minion0_yCoord, x_car1, y_car1, minion1_xCoord, minion1_yCoord, minion2_xCoord, minion2_yCoord, minion3_xCoord, minion3_yCoord, minion4_xCoord, minion4_yCoord, minion5_xCoord, minion5_yCoord,
 x_car7, y_car7, x_car8, y_car8, x_car9, y_car9, x_car10, y_car10, x_car11, y_car11, x_car12, y_car12,
 score, reset_game);
     input [6:0] x_player;
@@ -279,16 +260,16 @@ score, reset_game);
     input [6:0] minion0_yCoord;
     input [6:0] x_car1;
     input [6:0] y_car1;
-    input [6:0] x_car2;
-    input [6:0] y_car2;
-    input [6:0] x_car3;
-    input [6:0] y_car3;
-    input [6:0] x_car4;
-    input [6:0] y_car4;
-    input [6:0] x_car5;
-    input [6:0] y_car5;
-    input [6:0] x_car6;
-    input [6:0] y_car6;
+    input [6:0] minion1_xCoord;
+    input [6:0] minion1_yCoord;
+    input [6:0] minion2_xCoord;
+    input [6:0] minion2_yCoord;
+    input [6:0] minion3_xCoord;
+    input [6:0] minion3_yCoord;
+    input [6:0] minion4_xCoord;
+    input [6:0] minion4_yCoord;
+    input [6:0] minion5_xCoord;
+    input [6:0] minion5_yCoord;
     input [6:0] x_car7;
     input [6:0] y_car7;
     input [6:0] x_car8;
@@ -318,9 +299,9 @@ score, reset_game);
 //				score = score;
 //				end
         else if ((x_player == minion0_xCoord && y_player == minion0_yCoord) || (x_player == x_car1 && y_player == y_car1) ||
-          (x_player == x_car2 && y_player == y_car2) || (x_player == x_car3 && y_player == y_car3) ||
-          (x_player == x_car4 && y_player == y_car4) || (x_player == x_car5 && y_player == y_car5) ||
-          (x_player == x_car6 && y_player == y_car6) || (x_player == x_car7 && y_player == y_car7) ||
+          (x_player == minion1_xCoord && y_player == minion1_yCoord) || (x_player == minion2_xCoord && y_player == minion2_yCoord) ||
+          (x_player == minion3_xCoord && y_player == minion3_yCoord) || (x_player == minion4_xCoord && y_player == minion4_yCoord) ||
+          (x_player == minion5_xCoord && y_player == minion5_yCoord) || (x_player == x_car7 && y_player == y_car7) ||
           (x_player == x_car8 && y_player == y_car8) || (x_player == x_car9 && y_player == y_car9) ||
           (x_player == x_car10 && y_player == y_car10) || (x_player == x_car11 && y_player == y_car11) ||
           (x_player == x_car12 && y_player == y_car12) )  // player collide with car (any of the 13 cars)
@@ -481,6 +462,7 @@ module control(clk, move_r, move_l, move_d, move_u, reset_n, ld_x, ld_y, stateNu
 
 endmodule
 
+// can't exactly fix horizontal movements whilst on ladders w/o creating an entirely new datapath module
 module datapath(clk, ld_x, ld_y, in, reset_n, x, y, colour, stateNum, write, init_y, acolour);
     input clk;
     input [7:0] in;
@@ -488,11 +470,12 @@ module datapath(clk, ld_x, ld_y, in, reset_n, x, y, colour, stateNum, write, ini
     input [2:0] acolour;
     input ld_x, ld_y;
     input reset_n;
+	 input [3:0] stateNum;
+	 
     output reg [2:0] colour;
     output reg write;
     output reg [6:0] y;
     output reg [7:0] x;
-    input [3:0] stateNum;
 
     always @(posedge clk)
     begin
@@ -536,7 +519,7 @@ module datapath(clk, ld_x, ld_y, in, reset_n, x, y, colour, stateNum, write, ini
 							  x[7:0] <= x + 8'b00000001;
 							  colour <= acolour;
 							  write <= 1'b1;
-							end
+						  end
 						 end
                
             // The following is for moving left
@@ -548,7 +531,7 @@ module datapath(clk, ld_x, ld_y, in, reset_n, x, y, colour, stateNum, write, ini
 								colour <= acolour;
 							  write <= 1'b1;
 							 end
-						  else
+						else
 						  begin
                     x[7:0] <= x - 8'b00000001;
                     colour <= acolour;
@@ -573,7 +556,7 @@ module datapath(clk, ld_x, ld_y, in, reset_n, x, y, colour, stateNum, write, ini
 									colour <= acolour;
 									write <= 1'b1;
 								end
-							else if (x == 8'b01111110 && (y <= 7'b0110111 && y >= 7'b0011010)) // only allow up at ladder - bottom row 
+							else if (x == 8'b01111110 && (y <= 7'b0110111 && y >= 7'b0011010)) // only allow up at ladder - top row 
 								begin
 								  y[6:0] <= y + 7'b0000001;
 								  colour <= acolour;
@@ -604,7 +587,7 @@ module datapath(clk, ld_x, ld_y, in, reset_n, x, y, colour, stateNum, write, ini
 									colour <= acolour;
 									write <= 1'b1;
 								end
-							else if (x == 8'b01111110 && (y <= 7'b0111101 && y >= 7'b0011011)) // only allow up at ladder - bottom row 
+							else if (x == 8'b01111110 && (y <= 7'b0111101 && y >= 7'b0011011)) // only allow up at ladder - top row 
 								begin
 								  y[6:0] <= y - 7'b0000001;
 								  colour <= acolour;
