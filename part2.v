@@ -85,7 +85,7 @@ module lab_6
     reg [6:0] init_y_p = 7'b1110101;
     reg [2:0] acolour_p = 3'b010;
     // Instansiate datapath                             
-    datapath d0(.clk(CLOCK_50), .ld_x(ld_x), .ld_y(ld_y), .in(  init_player_coord), .reset_n(resetn), .x(x_player), .y(y_player), .colour(colour_player), .write(writeEn_player), .stateNum(stateNum), .init_y(init_y_p), .acolour(acolour_p));
+    datapath d0(.clk(CLOCK_50), .ld_x(ld_x), .ld_y(ld_y), .in(init_player_coord), .reset_n(resetn), .x(x_player), .y(y_player), .colour(colour_player), .write(writeEn_player), .stateNum(stateNum), .init_y(init_y_p), .acolour(acolour_p), .restrict_ladder_movement(alwaysOne));
    
     // Instansiate FSM control
     control c0(.clk(CLOCK_50), .move_r(~KEY[0]), .move_l(~KEY[3]), .move_d(~KEY[1]), .move_u(~KEY[2]), .reset_n(resetn), .ld_x(ld_x), .ld_y(ld_y), .stateNum(stateNum), .reset_game(reset_game), .dingding(counter_for_player), .how_fast(speed1));
@@ -104,7 +104,7 @@ module lab_6
     reg [6:0] minion0_yStart = 7'b0101010;
     reg [2:0] minion0_colourChoice = 3'b100;
 	 
-    datapath minion0_datapath(.clk(CLOCK_50), .ld_x(minion0_load_x), .ld_y(minion0_load_y), .in(  minion0_xStart), .reset_n(resetn), .x(minion0_xCoord), .y(minion0_yCoord), .colour(minion0_colour), .write(minion0_write), .stateNum(minion0_stateNum),  .init_y(minion0_yStart), .acolour(minion0_colourChoice));
+    datapath minion0_datapath(.clk(CLOCK_50), .ld_x(minion0_load_x), .ld_y(minion0_load_y), .in(  minion0_xStart), .reset_n(resetn), .x(minion0_xCoord), .y(minion0_yCoord), .colour(minion0_colour), .write(minion0_write), .stateNum(minion0_stateNum),  .init_y(minion0_yStart), .acolour(minion0_colourChoice), .restrict_ladder_movement(alwaysZero));
     control minion0_control(.clk(CLOCK_50), .move_r(alwaysOne), .move_l(~KEY[2]), .move_d(alwaysZero),  .move_u(alwaysZero), .reset_n(resetn), .ld_x(minion0_load_x), .ld_y(minion0_load_y), .stateNum(minion0_stateNum), .reset_game(alwaysZero), .dingding(minion0_counter), .how_fast(speed1));
 
 	 wire minion1_load_x, minion1_load_y;
@@ -118,7 +118,7 @@ module lab_6
     reg [6:0] minion1_yStart = 7'b0100100;
     reg [2:0] minion1_colourChoice = 3'b100;
 	 
-    datapath minion1_datapath(.clk(CLOCK_50), .ld_x(minion1_load_x), .ld_y(minion1_load_y), .in(minion1_xStart), .reset_n(resetn), .x(minion1_xCoord), .y(minion1_yCoord), .colour(minion1_colour), .write(minion1_write), .stateNum(minion1_stateNum),  .init_y(minion1_yStart), .acolour(minion1_colourChoice));
+    datapath minion1_datapath(.clk(CLOCK_50), .ld_x(minion1_load_x), .ld_y(minion1_load_y), .in(minion1_xStart), .reset_n(resetn), .x(minion1_xCoord), .y(minion1_yCoord), .colour(minion1_colour), .write(minion1_write), .stateNum(minion1_stateNum),  .init_y(minion1_yStart), .acolour(minion1_colourChoice), .restrict_ladder_movement(alwaysZero));
     control minion1_control(.clk(CLOCK_50), .move_r(alwaysZero), .move_l(alwaysOne), .move_d(alwaysZero),  .move_u(alwaysZero), .reset_n(resetn), .ld_x(minion1_load_x), .ld_y(minion1_load_y), .stateNum(minion1_stateNum), .reset_game(alwaysZero), .dingding(minion1_counter), .how_fast(speed1));
 	
 	 wire minion2_load_x, minion2_load_y;
@@ -132,7 +132,7 @@ module lab_6
     reg [6:0] minion2_yStart = 7'b1000110;
     reg [2:0] minion2_colourChoice = 3'b100;
                             
-    datapath minion2_datapath(.clk(CLOCK_50), .ld_x(minion2_load_x), .ld_y(minion2_load_y), .in(minion2_xStart), .reset_n(resetn), .x(minion2_xCoord), .y(minion2_yCoord), .colour(minion2_colour), .write(minion2_write), .stateNum(minion2_stateNum),  .init_y(minion2_yStart), .acolour(minion2_colourChoice));
+    datapath minion2_datapath(.clk(CLOCK_50), .ld_x(minion2_load_x), .ld_y(minion2_load_y), .in(minion2_xStart), .reset_n(resetn), .x(minion2_xCoord), .y(minion2_yCoord), .colour(minion2_colour), .write(minion2_write), .stateNum(minion2_stateNum),  .init_y(minion2_yStart), .acolour(minion2_colourChoice), .restrict_ladder_movement(alwaysZero));
     control minion2_control(.clk(CLOCK_50), .move_r(alwaysOne), .move_l(alwaysZero), .move_d(alwaysZero),  .move_u(alwaysZero), .reset_n(resetn), .ld_x(minion2_load_x), .ld_y(minion2_load_y), .stateNum(minion2_stateNum), .reset_game(alwaysZero), .dingding(minion2_counter), .how_fast(speed1));
     
     wire minion3_load_x, minion3_load_y;
@@ -146,7 +146,7 @@ module lab_6
     reg [6:0] minion3_yStart = 7'b1010010;
     reg [2:0] minion3_colourChoice = 3'b100;
                               
-    datapath minion3_datapath(.clk(CLOCK_50), .ld_x(minion3_load_x), .ld_y(minion3_load_y), .in(minion3_xStart), .reset_n(resetn), .x(minion3_xCoord), .y(minion3_yCoord), .colour(minion3_colour), .write(minion3_write), .stateNum(minion3_stateNum),  .init_y(minion3_yStart), .acolour(minion3_colourChoice));
+    datapath minion3_datapath(.clk(CLOCK_50), .ld_x(minion3_load_x), .ld_y(minion3_load_y), .in(minion3_xStart), .reset_n(resetn), .x(minion3_xCoord), .y(minion3_yCoord), .colour(minion3_colour), .write(minion3_write), .stateNum(minion3_stateNum),  .init_y(minion3_yStart), .acolour(minion3_colourChoice), .restrict_ladder_movement(alwaysZero));
     control minion3_control(.clk(CLOCK_50), .move_r(alwaysOne), .move_l(alwaysZero), .move_d(alwaysZero),  .move_u(alwaysZero), .reset_n(resetn), .ld_x(minion3_load_x), .ld_y(minion3_load_y), .stateNum(minion3_stateNum), .reset_game(alwaysZero), .dingding(minion3_counter), .how_fast(speed1));
 
     wire minion4_load_x, minion4_load_y;
@@ -160,7 +160,7 @@ module lab_6
     reg [6:0] minion4_yStart = 7'b1100001;
     reg [2:0] minion4_colourChoice = 3'b100;
                               
-    datapath minion4_datapath(.clk(CLOCK_50), .ld_x(minion4_load_x), .ld_y(minion4_load_y), .in(minion4_xStart), .reset_n(resetn), .x(minion4_xCoord), .y(minion4_yCoord), .colour(minion4_colour), .write(minion4_write), .stateNum(minion4_stateNum),  .init_y(minion4_yStart), .acolour(minion4_colourChoice));
+    datapath minion4_datapath(.clk(CLOCK_50), .ld_x(minion4_load_x), .ld_y(minion4_load_y), .in(minion4_xStart), .reset_n(resetn), .x(minion4_xCoord), .y(minion4_yCoord), .colour(minion4_colour), .write(minion4_write), .stateNum(minion4_stateNum),  .init_y(minion4_yStart), .acolour(minion4_colourChoice), .restrict_ladder_movement(alwaysZero));
     control minion4_control(.clk(CLOCK_50), .move_r(alwaysZero), .move_l(alwaysOne), .move_d(alwaysZero),  .move_u(alwaysZero), .reset_n(resetn), .ld_x(minion4_load_x), .ld_y(minion4_load_y), .stateNum(minion4_stateNum), .reset_game(alwaysZero), .dingding(minion4_counter), .how_fast(speed1));
 
     wire minion5_load_x, minion5_load_y;
@@ -174,14 +174,14 @@ module lab_6
     reg [6:0] minion5_yStart = 7'b1101011;
     reg [2:0] minion5_colourChoice = 3'b100;
                             
-    datapath minion5_datapath(.clk(CLOCK_50), .ld_x(minion5_load_x), .ld_y(minion5_load_y), .in(minion5_xStart), .reset_n(resetn), .x(minion5_xCoord), .y(minion5_yCoord), .colour(minion5_colour), .write(minion5_write), .stateNum(minion5_stateNum),  .init_y(minion5_yStart), .acolour(minion5_colourChoice));
+    datapath minion5_datapath(.clk(CLOCK_50), .ld_x(minion5_load_x), .ld_y(minion5_load_y), .in(minion5_xStart), .reset_n(resetn), .x(minion5_xCoord), .y(minion5_yCoord), .colour(minion5_colour), .write(minion5_write), .stateNum(minion5_stateNum),  .init_y(minion5_yStart), .acolour(minion5_colourChoice), .restrict_ladder_movement(alwaysZero));
     control minion5_control(.clk(CLOCK_50), .move_r(alwaysOne), .move_l(alwaysZero), .move_d(alwaysZero),  .move_u(alwaysZero), .reset_n(resetn), .ld_x(minion5_load_x), .ld_y(minion5_load_y), .stateNum(minion5_stateNum), .reset_game(alwaysZero), .dingding(minion5_counter), .how_fast(speed1));
     
 	 // -----------------------------------minion movements-----------------------------------------------------------
 
     wire [4:0] score;
     wire reset_game;
-    collisionLogic player_and_car0(x_player, y_player, minion0_xCoord, minion0_yCoord, minion1_xCoord, minion1_yCoord, minion2_xCoord, minion2_yCoord, minion3_xCoord, minion3_yCoord, minion4_xCoord, minion4_yCoord, minion5_xCoord, minion5_yCoord, score, reset_game);
+    collisionLogic player_and_minion(x_player, y_player, minion0_xCoord, minion0_yCoord, minion1_xCoord, minion1_yCoord, minion2_xCoord, minion2_yCoord, minion3_xCoord, minion3_yCoord, minion4_xCoord, minion4_yCoord, minion5_xCoord, minion5_yCoord, score, reset_game);
     hex_display first_digit(score, HEX1[6:0], HEX0[6:0]); //notice score is displayed in hexadecimal
    
 	 // Processes player/minion movement and determines whether or not player is moving
@@ -431,8 +431,9 @@ module control(clk, move_r, move_l, move_d, move_u, reset_n, ld_x, ld_y, stateNu
 endmodule
 
 // can't exactly fix horizontal movements whilst on ladders w/o creating an entirely new datapath module
-module datapath(clk, ld_x, ld_y, in, reset_n, x, y, colour, stateNum, write, init_y, acolour);
+module datapath(clk, ld_x, ld_y, in, reset_n, x, y, colour, stateNum, write, init_y, acolour, restrict_ladder_movement);
     input clk;
+	 input restrict_ladder_movement;
     input [7:0] in;
     input [6:0] init_y;
     input [2:0] acolour;
@@ -476,7 +477,13 @@ module datapath(clk, ld_x, ld_y, in, reset_n, x, y, colour, stateNum, write, ini
             // Moving Right Logic
             else if(stateNum == 4'b0100)   
                 begin
-						  if (x == 8'b01111110)
+						if (restrict_ladder_movement && ((x == 8'b01111110 && (y <= 7'b1110100 && y >= 7'b1010110)) || (x == 8'b00010000 && (y <= 7'b1010100 && y >= 7'b0111001)) || (x == 8'b01111110 && (y <= 7'b0110111 && y >= 7'b0011011))))
+							begin
+							  x[7:0] <= x;
+							  colour <= acolour;
+							  write <= 1'b1;
+							end
+						  else if (x == 8'b01111110)
 					       begin
 								x <= 8'b00000000;
 								colour <= acolour;
@@ -493,7 +500,13 @@ module datapath(clk, ld_x, ld_y, in, reset_n, x, y, colour, stateNum, write, ini
             // Moving Left Logic
             else if(stateNum == 4'b0010)   
                 begin
-						if (x == 8'b0000000)
+					   if (restrict_ladder_movement && ((x == 8'b01111110 && (y <= 7'b1110100 && y >= 7'b1010110)) || (x == 8'b00010000 && (y <= 7'b1010100 && y >= 7'b0111001)) || (x == 8'b01111110 && (y <= 7'b0110111 && y >= 7'b0011011))))
+						begin
+                    x[7:0] <= x;
+                    colour <= acolour;
+                    write <= 1'b1;
+						end
+						else if (x == 8'b0000000)
 					       begin
 								x <= 8'b01111110;
 								colour <= acolour;
