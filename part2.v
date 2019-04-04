@@ -1,4 +1,4 @@
-module lab_6
+module DotKong
     (
         CLOCK_50,                        //    On Board 50 MHz
         // Your inputs and outputs here
@@ -33,7 +33,7 @@ module lab_6
     output    [9:0]    VGA_B;                   //    VGA Blue[9:0]
    
     wire resetn;
-    assign resetn = alwaysOne ;
+    assign resetn = 1'b1 ;
    
     // Create the colour, x, y and writeEn wires that are inputs to the controller.
    reg [2:0] colour;// notice they were originally wire ,  I made them reg     edit:Mar20, 2:30am
@@ -68,8 +68,6 @@ module lab_6
    
     // Put your code here. Your code should produce signals x,y,colour and writeEn/plot
     // for the VGA controller, in addition to any other functionality your design may require.
-    reg alwaysOne = 1'b1;
-    reg alwaysZero = 1'b0;
 	 reg speed1 = 2'b00;
 	 reg speed2 = 2'b01;
 	 reg speed3 = 2'b10;
@@ -85,10 +83,10 @@ module lab_6
     reg [6:0] init_y_p = 7'b1110101;
     reg [2:0] acolour_p = 3'b010;
     // Instansiate datapath                             
-    datapath d0(.clk(CLOCK_50), .ld_x(ld_x), .ld_y(ld_y), .in(init_player_coord), .reset_n(resetn), .x(x_player), .y(y_player), .colour(colour_player), .write(writeEn_player), .stateNum(stateNum), .init_y(init_y_p), .acolour(acolour_p), .restrict_ladder_movement(alwaysOne));
+    datapath d0(.clk(CLOCK_50), .ld_x(ld_x), .ld_y(ld_y), .in(init_player_coord), .reset_n(resetn), .x(x_player), .y(y_player), .colour(colour_player), .write(writeEn_player), .stateNum(stateNum), .init_y(init_y_p), .acolour(acolour_p), .restrict_ladder_movement(1'b1));
    
     // Instansiate FSM control
-    control c0(.clk(CLOCK_50), .move_r(~KEY[0]), .move_l(~KEY[3]), .move_d(~KEY[1]), .move_u(~KEY[2]), .reset_n(resetn), .ld_x(ld_x), .ld_y(ld_y), .stateNum(stateNum), .reset_game(reset_game), .dingding(counter_for_player), .how_fast(speed1));
+    control c0(.clk(CLOCK_50), .move_r(~KEY[0]), .move_l(~KEY[3]), .move_d(~KEY[1]), .move_u(~KEY[2]), .reset_n(resetn), .ld_x(ld_x), .ld_y(ld_y), .stateNum(stateNum), .reset_game(reset_game), .press_counter(counter_for_player), .how_fast(speed1));
    
      
     // --------------------------------------minion movements----------------------------------------------------------
@@ -104,8 +102,8 @@ module lab_6
     reg [6:0] minion0_yStart = 7'b0101010;
     reg [2:0] minion0_colourChoice = 3'b100;
 	 
-    datapath minion0_datapath(.clk(CLOCK_50), .ld_x(minion0_load_x), .ld_y(minion0_load_y), .in(  minion0_xStart), .reset_n(resetn), .x(minion0_xCoord), .y(minion0_yCoord), .colour(minion0_colour), .write(minion0_write), .stateNum(minion0_stateNum),  .init_y(minion0_yStart), .acolour(minion0_colourChoice), .restrict_ladder_movement(alwaysZero));
-    control minion0_control(.clk(CLOCK_50), .move_r(alwaysOne), .move_l(~KEY[2]), .move_d(alwaysZero),  .move_u(alwaysZero), .reset_n(resetn), .ld_x(minion0_load_x), .ld_y(minion0_load_y), .stateNum(minion0_stateNum), .reset_game(alwaysZero), .dingding(minion0_counter), .how_fast(speed1));
+    datapath minion0_datapath(.clk(CLOCK_50), .ld_x(minion0_load_x), .ld_y(minion0_load_y), .in(  minion0_xStart), .reset_n(resetn), .x(minion0_xCoord), .y(minion0_yCoord), .colour(minion0_colour), .write(minion0_write), .stateNum(minion0_stateNum),  .init_y(minion0_yStart), .acolour(minion0_colourChoice), .restrict_ladder_movement(1'b0));
+    control minion0_control(.clk(CLOCK_50), .move_r(1'b1), .move_l(~KEY[2]), .move_d(1'b0),  .move_u(1'b0), .reset_n(resetn), .ld_x(minion0_load_x), .ld_y(minion0_load_y), .stateNum(minion0_stateNum), .reset_game(1'b0), .press_counter(minion0_counter), .how_fast(speed1));
 
 	 wire minion1_load_x, minion1_load_y;
     wire [3:0] minion1_stateNum;
@@ -118,8 +116,8 @@ module lab_6
     reg [6:0] minion1_yStart = 7'b0100100;
     reg [2:0] minion1_colourChoice = 3'b100;
 	 
-    datapath minion1_datapath(.clk(CLOCK_50), .ld_x(minion1_load_x), .ld_y(minion1_load_y), .in(minion1_xStart), .reset_n(resetn), .x(minion1_xCoord), .y(minion1_yCoord), .colour(minion1_colour), .write(minion1_write), .stateNum(minion1_stateNum),  .init_y(minion1_yStart), .acolour(minion1_colourChoice), .restrict_ladder_movement(alwaysZero));
-    control minion1_control(.clk(CLOCK_50), .move_r(alwaysZero), .move_l(alwaysOne), .move_d(alwaysZero),  .move_u(alwaysZero), .reset_n(resetn), .ld_x(minion1_load_x), .ld_y(minion1_load_y), .stateNum(minion1_stateNum), .reset_game(alwaysZero), .dingding(minion1_counter), .how_fast(speed1));
+    datapath minion1_datapath(.clk(CLOCK_50), .ld_x(minion1_load_x), .ld_y(minion1_load_y), .in(minion1_xStart), .reset_n(resetn), .x(minion1_xCoord), .y(minion1_yCoord), .colour(minion1_colour), .write(minion1_write), .stateNum(minion1_stateNum),  .init_y(minion1_yStart), .acolour(minion1_colourChoice), .restrict_ladder_movement(1'b0));
+    control minion1_control(.clk(CLOCK_50), .move_r(1'b0), .move_l(1'b1), .move_d(1'b0),  .move_u(1'b0), .reset_n(resetn), .ld_x(minion1_load_x), .ld_y(minion1_load_y), .stateNum(minion1_stateNum), .reset_game(1'b0), .press_counter(minion1_counter), .how_fast(speed1));
 	
 	 wire minion2_load_x, minion2_load_y;
     wire [3:0] minion2_stateNum;
@@ -132,8 +130,8 @@ module lab_6
     reg [6:0] minion2_yStart = 7'b1000110;
     reg [2:0] minion2_colourChoice = 3'b100;
                             
-    datapath minion2_datapath(.clk(CLOCK_50), .ld_x(minion2_load_x), .ld_y(minion2_load_y), .in(minion2_xStart), .reset_n(resetn), .x(minion2_xCoord), .y(minion2_yCoord), .colour(minion2_colour), .write(minion2_write), .stateNum(minion2_stateNum),  .init_y(minion2_yStart), .acolour(minion2_colourChoice), .restrict_ladder_movement(alwaysZero));
-    control minion2_control(.clk(CLOCK_50), .move_r(alwaysOne), .move_l(alwaysZero), .move_d(alwaysZero),  .move_u(alwaysZero), .reset_n(resetn), .ld_x(minion2_load_x), .ld_y(minion2_load_y), .stateNum(minion2_stateNum), .reset_game(alwaysZero), .dingding(minion2_counter), .how_fast(speed1));
+    datapath minion2_datapath(.clk(CLOCK_50), .ld_x(minion2_load_x), .ld_y(minion2_load_y), .in(minion2_xStart), .reset_n(resetn), .x(minion2_xCoord), .y(minion2_yCoord), .colour(minion2_colour), .write(minion2_write), .stateNum(minion2_stateNum),  .init_y(minion2_yStart), .acolour(minion2_colourChoice), .restrict_ladder_movement(1'b0));
+    control minion2_control(.clk(CLOCK_50), .move_r(1'b1), .move_l(1'b0), .move_d(1'b0),  .move_u(1'b0), .reset_n(resetn), .ld_x(minion2_load_x), .ld_y(minion2_load_y), .stateNum(minion2_stateNum), .reset_game(1'b0), .press_counter(minion2_counter), .how_fast(speed1));
     
     wire minion3_load_x, minion3_load_y;
     wire [3:0] minion3_stateNum;
@@ -146,8 +144,8 @@ module lab_6
     reg [6:0] minion3_yStart = 7'b1010010;
     reg [2:0] minion3_colourChoice = 3'b100;
                               
-    datapath minion3_datapath(.clk(CLOCK_50), .ld_x(minion3_load_x), .ld_y(minion3_load_y), .in(minion3_xStart), .reset_n(resetn), .x(minion3_xCoord), .y(minion3_yCoord), .colour(minion3_colour), .write(minion3_write), .stateNum(minion3_stateNum),  .init_y(minion3_yStart), .acolour(minion3_colourChoice), .restrict_ladder_movement(alwaysZero));
-    control minion3_control(.clk(CLOCK_50), .move_r(alwaysOne), .move_l(alwaysZero), .move_d(alwaysZero),  .move_u(alwaysZero), .reset_n(resetn), .ld_x(minion3_load_x), .ld_y(minion3_load_y), .stateNum(minion3_stateNum), .reset_game(alwaysZero), .dingding(minion3_counter), .how_fast(speed1));
+    datapath minion3_datapath(.clk(CLOCK_50), .ld_x(minion3_load_x), .ld_y(minion3_load_y), .in(minion3_xStart), .reset_n(resetn), .x(minion3_xCoord), .y(minion3_yCoord), .colour(minion3_colour), .write(minion3_write), .stateNum(minion3_stateNum),  .init_y(minion3_yStart), .acolour(minion3_colourChoice), .restrict_ladder_movement(1'b0));
+    control minion3_control(.clk(CLOCK_50), .move_r(1'b1), .move_l(1'b0), .move_d(1'b0),  .move_u(1'b0), .reset_n(resetn), .ld_x(minion3_load_x), .ld_y(minion3_load_y), .stateNum(minion3_stateNum), .reset_game(1'b0), .press_counter(minion3_counter), .how_fast(speed1));
 
     wire minion4_load_x, minion4_load_y;
     wire [3:0] minion4_stateNum;
@@ -160,8 +158,8 @@ module lab_6
     reg [6:0] minion4_yStart = 7'b1100001;
     reg [2:0] minion4_colourChoice = 3'b100;
                               
-    datapath minion4_datapath(.clk(CLOCK_50), .ld_x(minion4_load_x), .ld_y(minion4_load_y), .in(minion4_xStart), .reset_n(resetn), .x(minion4_xCoord), .y(minion4_yCoord), .colour(minion4_colour), .write(minion4_write), .stateNum(minion4_stateNum),  .init_y(minion4_yStart), .acolour(minion4_colourChoice), .restrict_ladder_movement(alwaysZero));
-    control minion4_control(.clk(CLOCK_50), .move_r(alwaysZero), .move_l(alwaysOne), .move_d(alwaysZero),  .move_u(alwaysZero), .reset_n(resetn), .ld_x(minion4_load_x), .ld_y(minion4_load_y), .stateNum(minion4_stateNum), .reset_game(alwaysZero), .dingding(minion4_counter), .how_fast(speed1));
+    datapath minion4_datapath(.clk(CLOCK_50), .ld_x(minion4_load_x), .ld_y(minion4_load_y), .in(minion4_xStart), .reset_n(resetn), .x(minion4_xCoord), .y(minion4_yCoord), .colour(minion4_colour), .write(minion4_write), .stateNum(minion4_stateNum),  .init_y(minion4_yStart), .acolour(minion4_colourChoice), .restrict_ladder_movement(1'b0));
+    control minion4_control(.clk(CLOCK_50), .move_r(1'b0), .move_l(1'b1), .move_d(1'b0),  .move_u(1'b0), .reset_n(resetn), .ld_x(minion4_load_x), .ld_y(minion4_load_y), .stateNum(minion4_stateNum), .reset_game(1'b0), .press_counter(minion4_counter), .how_fast(speed1));
 
     wire minion5_load_x, minion5_load_y;
     wire [3:0] minion5_stateNum;
@@ -174,8 +172,8 @@ module lab_6
     reg [6:0] minion5_yStart = 7'b1101011;
     reg [2:0] minion5_colourChoice = 3'b100;
                             
-    datapath minion5_datapath(.clk(CLOCK_50), .ld_x(minion5_load_x), .ld_y(minion5_load_y), .in(minion5_xStart), .reset_n(resetn), .x(minion5_xCoord), .y(minion5_yCoord), .colour(minion5_colour), .write(minion5_write), .stateNum(minion5_stateNum),  .init_y(minion5_yStart), .acolour(minion5_colourChoice), .restrict_ladder_movement(alwaysZero));
-    control minion5_control(.clk(CLOCK_50), .move_r(alwaysOne), .move_l(alwaysZero), .move_d(alwaysZero),  .move_u(alwaysZero), .reset_n(resetn), .ld_x(minion5_load_x), .ld_y(minion5_load_y), .stateNum(minion5_stateNum), .reset_game(alwaysZero), .dingding(minion5_counter), .how_fast(speed1));
+    datapath minion5_datapath(.clk(CLOCK_50), .ld_x(minion5_load_x), .ld_y(minion5_load_y), .in(minion5_xStart), .reset_n(resetn), .x(minion5_xCoord), .y(minion5_yCoord), .colour(minion5_colour), .write(minion5_write), .stateNum(minion5_stateNum),  .init_y(minion5_yStart), .acolour(minion5_colourChoice), .restrict_ladder_movement(1'b0));
+    control minion5_control(.clk(CLOCK_50), .move_r(1'b1), .move_l(1'b0), .move_d(1'b0),  .move_u(1'b0), .reset_n(resetn), .ld_x(minion5_load_x), .ld_y(minion5_load_y), .stateNum(minion5_stateNum), .reset_game(1'b0), .press_counter(minion5_counter), .how_fast(speed1));
     
 	 // -----------------------------------minion movements-----------------------------------------------------------
 
@@ -260,18 +258,15 @@ module collisionLogic(x_player, y_player, minion0_xCoord, minion0_yCoord, minion
     output reg reset_game;
     
 	
-    always @(*) //Notice it is not positive edge
+    always @(*)
     begin
+		  // when player collides with monster, increment score
         if (y_player == 7'b0011010 && (x_player >= 7'b0000000 && x_player <= 7'b00010100)) // When player reaches the top of the screen and passes the boss
-            begin // it is going into this state
+            begin
                 score = score + 5'b00001;
                 reset_game = 1'b1;
             end
-//		  else if (y_player == 7'b1110001)   //Change this!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//				begin
-//			   reset_game = 1'b1;
-//				score = score;
-//				end
+			// when player collides with any of the minions, reset score and game
         else if ((x_player == minion0_xCoord && y_player == minion0_yCoord) || (x_player == minion1_xCoord && y_player == minion1_yCoord) ||
 		           (x_player == minion2_xCoord && y_player == minion2_yCoord) || (x_player == minion3_xCoord && y_player == minion3_yCoord) ||
 					  (x_player == minion4_xCoord && y_player == minion4_yCoord) || (x_player == minion5_xCoord && y_player == minion5_yCoord))  // player collide with any minion
@@ -288,8 +283,8 @@ module collisionLogic(x_player, y_player, minion0_xCoord, minion0_yCoord, minion
 endmodule				  
 
 
-module control(clk, move_r, move_l, move_d, move_u, reset_n, ld_x, ld_y, stateNum, reset_game, dingding, how_fast);
-    input [25:0] dingding; // dingding is the counter!
+module control(clk, move_r, move_l, move_d, move_u, reset_n, ld_x, ld_y, stateNum, reset_game, press_counter, how_fast);
+    input [25:0] press_counter;
     input reset_game;
     input clk, move_r, move_l, move_d, move_u, reset_n;
 	 input [1:0] how_fast;
@@ -330,7 +325,7 @@ module control(clk, move_r, move_l, move_d, move_u, reset_n, ld_x, ld_y, stateNu
 	 end
 	 RateDivider player_counter1(clk, press_now, reset_n, speed);
 	 
-    assign result_press_now = (press_now == dingding) ? 1 : 0;
+    assign result_press_now = (press_now == press_counter) ? 1 : 0;
    
     always @(*)
     begin: state_table
@@ -369,50 +364,44 @@ module control(clk, move_r, move_l, move_d, move_u, reset_n, ld_x, ld_y, stateNu
     begin: enable_signals
         ld_x = 1'b0;
         ld_y = 1'b0;
-        //write = 1'b0;
         stateNum = 4'b0000;
         case (curr)
             S_LOAD_X: begin
                 ld_x = 1'b1;
                 end
+					 
             S_LOAD_Y: begin
                 ld_y = 1'b1;
                 end
-            cleanUp: begin // this IS suppose to be the same as clear all (edited on mar27)
+					 
+            cleanUp: begin
                 stateNum = 4'b0001;
                 ld_y = 1'b0;
-                //write = 1'b1;
                 end
+					 
             clear_all: begin
                 stateNum = 4'b0001;
                 ld_y = 1'b0;
-                //write = 1'b1;
                 end
            
             print_right: begin
                 stateNum = 4'b0100;
                 ld_y = 1'b0;
-                //write = 1'b1;
                 end
            
             print_down: begin
                 stateNum = 4'b0011;
                 ld_y = 1'b0;
-                //write = 1'b1;
                 end				  
                
             print_left: begin
                 stateNum = 4'b0010;
                 ld_y = 1'b0;
-   
-                //write = 1'b1;
                 end
                
             print_up: begin
                 stateNum = 4'b1001;
                 ld_y = 1'b0;
-   
-                //write = 1'b1;
                 end
                
             after_drawing: begin
@@ -430,7 +419,7 @@ module control(clk, move_r, move_l, move_d, move_u, reset_n, ld_x, ld_y, stateNu
     end
 endmodule
 
-// can't exactly fix horizontal movements whilst on ladders w/o creating an entirely new datapath module
+// this module monitors horizontal/vertical movements of the player - restricting at certain spots
 module datapath(clk, ld_x, ld_y, in, reset_n, x, y, colour, stateNum, write, init_y, acolour, restrict_ladder_movement);
     input clk;
 	 input restrict_ladder_movement;
@@ -510,7 +499,7 @@ module datapath(clk, ld_x, ld_y, in, reset_n, x, y, colour, stateNum, write, ini
 					       begin
 								x <= 8'b01111110;
 								colour <= acolour;
-							  write <= 1'b1;
+							  write <= 1'b1;// can't exactly fix horizontal movements whilst on ladders w/o creating an entirely new datapath modu
 							 end
 						else
 						  begin
@@ -590,197 +579,193 @@ module datapath(clk, ld_x, ld_y, in, reset_n, x, y, colour, stateNum, write, ini
 endmodule
    
    
-module RateDivider (clock, q, Clear_b, how_speedy);  // Note that car is 4 times faster than the player
+module RateDivider (clock, q, Clear_b, Max_num); 
     input [0:0] clock;
     input [0:0] Clear_b;
-	 input [25:0] how_speedy;
+	 input [25:0] Max_num;
     output reg [26:0] q; // declare q
-    //wire [27:0] d; // declare d, not needed
     always@(posedge clock)   // triggered every time clock rises
     begin
-    // else if (ParLoad == 1'b1) // Check if parallel load, not needed!!!!
-    //        q <= d; // load d
-        if (q == how_speedy) // when q is the maximum value for the counter, this number is 50 million - 1
+        if (q == Max_num) // when q is the maximum value for the counter
             q <= 0; // q reset to 0
         else if (clock == 1'b1) // increment q only when Enable is 1
             q <= q + 1'b1;  // increment q
-    //    q <= q - 1'b1;  // decrement q
     end
 endmodule
 
 
 // The hex display for showing the level of the player
-module hex_display(IN, OUT1, OUT2);
-   input [4:0] IN;
-   output reg [6:0] OUT1, OUT2;
+module hex_display(score_in, score_out1, score_out2);
+   input [4:0] score_in;
+   output reg [6:0] score_out1, score_out2;
      always @(*)
      begin
-        case(IN[4:0])
+        case(score_in[4:0])
             5'b00000:
                 begin
-                    OUT1 = 7'b1000000;
-                    OUT2 = 7'b1000000;
+                    score_out1 = 7'b1000000;
+                    score_out2 = 7'b1000000;
                 end
             5'b00001:
                 begin
-                    OUT1 = 7'b1000000;
-                    OUT2 = 7'b1111001;
+                    score_out1 = 7'b1000000;
+                    score_out2 = 7'b1111001;
                 end
             5'b00010:
                 begin
-                    OUT1 = 7'b1000000;
-                    OUT2 = 7'b0100100;
+                    score_out1 = 7'b1000000;
+                    score_out2 = 7'b0100100;
                 end
             5'b00011:
                 begin
-                    OUT1 = 7'b1000000;
-                    OUT2 = 7'b0110000;
+                    score_out1 = 7'b1000000;
+                    score_out2 = 7'b0110000;
                 end
             5'b00100:
                 begin
-                    OUT1 = 7'b1000000;
-                    OUT2 = 7'b0011001;
+                    score_out1 = 7'b1000000;
+                    score_out2 = 7'b0011001;
                 end
             5'b00101:
                 begin
-                    OUT1 = 7'b1000000;
-                    OUT2 = 7'b0010010;
+                    score_out1 = 7'b1000000;
+                    score_out2 = 7'b0010010;
                 end
             5'b00110:
                 begin
-                    OUT1 = 7'b1000000;
-                    OUT2 = 7'b0000010;
+                    score_out1 = 7'b1000000;
+                    score_out2 = 7'b0000010;
                 end
             5'b00111:
                 begin
-                    OUT1 = 7'b1000000;
-                    OUT2 = 7'b1111000;
+                    score_out1 = 7'b1000000;
+                    score_out2 = 7'b1111000;
                 end
             5'b01000:
                 begin
-                    OUT1 = 7'b1000000;
-                    OUT2 = 7'b0000000;
+                    score_out1 = 7'b1000000;
+                    score_out2 = 7'b0000000;
                 end
             5'b01001:
                 begin
-                    OUT1 = 7'b1000000;
-                    OUT2 = 7'b0011000;
+                    score_out1 = 7'b1000000;
+                    score_out2 = 7'b0011000;
                 end
             5'b01010:
                 begin
-                    OUT1 = 7'b1111001;
-                    OUT2 = 7'b1000000;
+                    score_out1 = 7'b1111001;
+                    score_out2 = 7'b1000000;
                 end
             5'b01011:
                 begin
-                    OUT1 = 7'b1111001;
-                    OUT2 = 7'b1111001;
+                    score_out1 = 7'b1111001;
+                    score_out2 = 7'b1111001;
                 end
             5'b01100:
                 begin
-                    OUT1 = 7'b1111001;
-                    OUT2 = 7'b0100100;
+                    score_out1 = 7'b1111001;
+                    score_out2 = 7'b0100100;
                 end
             5'b01101:
                 begin
-                    OUT1 = 7'b1111001;
-                    OUT2 = 7'b0110000;
+                    score_out1 = 7'b1111001;
+                    score_out2 = 7'b0110000;
                 end
             5'b01110:
                 begin
-                    OUT1 = 7'b1111001;
-                    OUT2 = 7'b0011001;
+                    score_out1 = 7'b1111001;
+                    score_out2 = 7'b0011001;
                 end
             5'b01111:
                 begin
-                    OUT1 = 7'b1111001;
-                    OUT2 = 7'b0010010;
+                    score_out1 = 7'b1111001;
+                    score_out2 = 7'b0010010;
                 end
             5'b10000:
                 begin
-                    OUT1 = 7'b1111001;
-                    OUT2 = 7'b0000010;
+                    score_out1 = 7'b1111001;
+                    score_out2 = 7'b0000010;
                 end
             5'b10001:
                 begin
-                    OUT1 = 7'b1111001;
-                    OUT2 = 7'b1111000;
+                    score_out1 = 7'b1111001;
+                    score_out2 = 7'b1111000;
                 end
             5'b10010:
                 begin
-                    OUT1 = 7'b1111001;
-                    OUT2 = 7'b0000000;
+                    score_out1 = 7'b1111001;
+                    score_out2 = 7'b0000000;
                 end
             5'b10011:
                 begin
-                    OUT1 = 7'b1111001;
-                    OUT2 = 7'b0011000;
+                    score_out1 = 7'b1111001;
+                    score_out2 = 7'b0011000;
                 end
             5'b10100:
                 begin
-                    OUT1 = 7'b0100100;
-                    OUT2 = 7'b1000000;
+                    score_out1 = 7'b0100100;
+                    score_out2 = 7'b1000000;
                 end
             5'b10101:
                 begin
-                    OUT1 = 7'b0100100;
-                    OUT2 = 7'b1111001;
+                    score_out1 = 7'b0100100;
+                    score_out2 = 7'b1111001;
                 end
             5'b10110:
                 begin
-                    OUT1 = 7'b0100100;
-                    OUT2 = 7'b0100100;
+                    score_out1 = 7'b0100100;
+                    score_out2 = 7'b0100100;
                 end
             5'b10111:
                 begin
-                    OUT1 = 7'b0100100;
-                    OUT2 = 7'b0110000;
+                    score_out1 = 7'b0100100;
+                    score_out2 = 7'b0110000;
                 end
             5'b11000:
                 begin
-                    OUT1 = 7'b0100100;
-                    OUT2 = 7'b0011001;
+                    score_out1 = 7'b0100100;
+                    score_out2 = 7'b0011001;
                 end
             5'b11001:
                 begin
-                    OUT1 = 7'b0100100;
-                    OUT2 = 7'b0010010;
+                    score_out1 = 7'b0100100;
+                    score_out2 = 7'b0010010;
                 end
             5'b11010:
                 begin
-                    OUT1 = 7'b0100100;
-                    OUT2 = 7'b0000010;
+                    score_out1 = 7'b0100100;
+                    score_out2 = 7'b0000010;
                 end
             5'b11011:
                 begin
-                    OUT1 = 7'b0100100;
-                    OUT2 = 7'b1111000;
+                    score_out1 = 7'b0100100;
+                    score_out2 = 7'b1111000;
                 end
             5'b11100:
                 begin
-                    OUT1 = 7'b0100100;
-                    OUT2 = 7'b0000000;
+                    score_out1 = 7'b0100100;
+                    score_out2 = 7'b0000000;
                 end
             5'b11101:
                 begin
-                    OUT1 = 7'b0100100;
-                    OUT2 = 7'b0011000;
+                    score_out1 = 7'b0100100;
+                    score_out2 = 7'b0011000;
                 end
             5'b11110:
                 begin
-                    OUT1 = 7'b0110000;
-                    OUT2 = 7'b1000000;
+                    score_out1 = 7'b0110000;
+                    score_out2 = 7'b1000000;
                 end
             5'b11111:
                 begin
-                    OUT1 = 7'b0110000;
-                    OUT2 = 7'b0100100;
+                    score_out1 = 7'b0110000;
+                    score_out2 = 7'b0100100;
                 end
            
             default:
                 begin
-                    OUT1 = 7'b0110000;
-                    OUT2 = 7'b1111111;
+                    score_out1 = 7'b0110000;
+                    score_out2 = 7'b1111111;
                 end
         endcase
     end
